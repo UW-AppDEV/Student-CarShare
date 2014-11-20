@@ -1,4 +1,22 @@
-var app = angular.module('app', ['ionic']);
+angular.module('ionic.utils', [])
+    .factory('$localstorage', ['$window', function ($window) {
+        return {
+            set: function (key, value) {
+                $window.localStorage[key] = value;
+            },
+            get: function (key, defaultValue) {
+                return $window.localStorage[key] || defaultValue;
+            },
+            setObject: function (key, value) {
+                $window.localStorage[key] = JSON.stringify(value);
+            },
+            getObject: function (key, defaultValue) {
+                return JSON.parse($window.localStorage[key] || JSON.stringify(defaultValue));
+            }
+        }
+    }]);
+
+var app = angular.module('app', ['ionic', 'ionic.utils']);
 
 app.run(function ($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -25,7 +43,11 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/page10');
 });
 
-app.controller('MainCtrl', function ($scope, $http) {
+app.controller('MainCtrl', function ($scope, $http, $localstorage) {
+    $scope.testlocal = $localstorage.get('test', 'local storage is working');
+    $scope.test = function () {
+        alert($scope.testlocal);
+    };
     $scope.httpTest = function () {
         $http.get('http://rest-service.guides.spring.io/greeting', {
             params: {}
