@@ -1,3 +1,12 @@
+//=============================Functions==============================
+var httpGet = function (URL) {
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", URL, false);
+    xmlHttp.send(null);
+    return JSON.parse(xmlHttp.responseText);
+}
+
 angular.module('ionic.utils', [])
     .factory('$localstorage', ['$window', function ($window) {
         return {
@@ -43,20 +52,29 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/page10');
 });
 
+app.service('VideosService', ['$window', '$rootScope', '$http', '$localstorage', function ($window, $rootScope, $q, $localstorage, $http) {
+    var service = this;
+    this.search = function (term, type, items, page) {
+        results[type].length = 0;
+        data = httpGet('https://www.googleapis.com/youtube/v3/search' +
+        '?key=' + key +
+        '&type=' + type +
+        '&maxResults=' + items +
+        '&part=' + 'id,snippet' +
+        '&fields' + 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle' +
+        '&q=' + term);
+        results[type] = data.items;
+    };
+}]);
+
 app.controller('MainCtrl', function ($scope, $http, $localstorage) {
     $scope.testlocal = $localstorage.get('test', 'local storage is working');
     $scope.test = function () {
         alert($scope.testlocal);
     };
     $scope.httpTest = function () {
-        $http.get('http://rest-service.guides.spring.io/greeting', {
-            params: {}
-        })
-            .success(function (data) {
-                alert(JSON.stringify(data, null, 4));
-            })
-            .error(function () {
-            });
+        data = httpGet('http://rest-service.guides.spring.io/greeting');
+        alert(JSON.stringify(data));
     };
     $scope.request = function () {
         $http.get('https://reserve.studentcarshare.ca/webservices/WSUser/WSRest', {
