@@ -1,10 +1,15 @@
 //=============================Functions==============================
+
 var httpGet = function (URL) {
     var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", URL, false);
     xmlHttp.send(null);
     return JSON.parse(xmlHttp.responseText);
+}
+
+var lol = function () {
+    alert('lol');
 }
 
 function sha1(msg) {
@@ -200,6 +205,7 @@ app.service('VideosService', ['$window', '$rootScope', '$http', '$localstorage',
     };
 }]);
 
+
 app.controller('MainCtrl', function ($scope, $http, $localstorage) {
     $scope.testlocal = $localstorage.get('test', 'local storage is working');
     $scope.test = function () {
@@ -211,16 +217,30 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage) {
     };
     $scope.hashPW = function (pw) {
         alert(sha1(sha1(pw)));
+        console.log(getJSON(xmlSource));
     };
     $scope.request = function () {
-        $http.get('https://reserve.studentcarshare.ca/webservices/WSUser/WSRest', {
+        var url = "https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?callback=JSON_CALLBACK";
+        $http.jsonp(url).
+            success(function (data) {
+
+            });
+        /*
+         This Code is ALMOST working DO NOT remove jsonp
+         XML is returned correctly across origin, now convert it to JSON and we are done
+         */
+
+        /*
+         data = $http.get('https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest', {
             params: {}
         })
             .success(function (data) {
-                alert("done");
+         return data;
             })
             .error(function () {
             });
+         alert(JSON.stringify(data));
+         */
     };
 });
 
