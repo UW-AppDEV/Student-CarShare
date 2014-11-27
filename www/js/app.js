@@ -229,6 +229,37 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage) {
          This Code is ALMOST working DO NOT remove jsonp
          XML is returned correctly across origin, now convert it to JSON and we are done
          */
+        /*
+         WORKING COPY (INCOMPATIBLE WITH ANGULAR)
+         <html>
+         <head>
+         <!--<script src="deflate.min.js"></script>-->
+         </head>
+         <body>
+         <script>
+         var xmlSource = "https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?format=xml";
+         var yqlURL = [
+         "http://query.yahooapis.com/v1/public/yql",
+         "?q=" + encodeURIComponent("select * from xml where url='" + xmlSource + "'"),
+         "&format=xml&callback="
+         ].join("");
+         function getJSON(URL) {
+         var xmlHttp = null;
+         xmlHttp = new XMLHttpRequest();
+         xmlHttp.open("GET", URL, false);
+         xmlHttp.send(null);
+         return xmlHttp.responseText;
+         }
+         function myCallback (data){
+         console.log(data);
+         };
+         console.log(getJSON(xmlSource));
+         </script>
+         <script type="text/xml" src="https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?format=xml&callback=myCallback"></script>
+         <!--ALMOST WORKING OMFG XML<script type="text/javascript" src="https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?format=xml&callback=myCallback"></script>-->
+         </body>
+         </html>
+         */
 
         /*
          data = $http.get('https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest', {
