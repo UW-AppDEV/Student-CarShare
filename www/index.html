@@ -8,6 +8,8 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="//code.ionicframework.com/nightly/js/angular/angular-resource.js"></script>
     <script src="js/app.js"></script>
   </head>
   <body ng-app="app" animation="slide-left-right-ios7">
@@ -56,7 +58,7 @@
       <ion-content padding="true" class="has-header">
         <button ng-click="httpTest()" class="button button-stable button-block">Test HTTP</button>
         <button ng-click="test()" class="button button-stable button-block">Test Local Storage</button>
-        <button ng-click="request()" class="button button-stable button-block">Test Database</button>
+        <button ng-click="request()" class="button button-stable button-block">Test Database (proxy)</button>
         <button ng-click="hashPW('gamesinstitute')" class="button button-stable button-block">Hash Password</button>
       </ion-content>
     </ion-view></script>
