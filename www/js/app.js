@@ -50,11 +50,10 @@ app.factory('web', function($q, $http, $templateCache) {
   return {
     get: function(query) {
       var deferred = $q.defer();
-      var query = '';
       var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
       $http.get(url)
       .success(function(data) {
-        console.log(data);
+        console.log(JSON.stringify(data));
         deferred.resolve(data);
       });
       return deferred.promise;
@@ -82,15 +81,16 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $service, web
   $scope.test = function () {
     alert($scope.testlocal);
   };
-  $scope.httpTest = function () {
-    data = httpGet('http://rest-service.guides.spring.io/greeting');
-    alert(JSON.stringify(data));
-  };
   $scope.hashPW = function (pw) {
     alert(sha1(sha1(pw)));
   };
   $scope.request = function () {
     web.get('');
+  };
+  $scope.rest = function (user, pw, method){
+    time = Math.floor(Date.now()/1000);
+    hash = sha1(sha1(pw)+time+method)
+    web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile')
   };
 });
 
