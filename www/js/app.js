@@ -62,19 +62,9 @@ app.factory('web', function($q, $http, $templateCache) {
   };
 });
 
-app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', function ($window, $rootScope, $q, $localstorage, $http) {
+app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
   var service = this;
-  this.search = function (term, type, items, page) {
-    results[type].length = 0;
-    data = httpGet('https://www.googleapis.com/youtube/v3/search' +
-                   '?key=' + key +
-                   '&type=' + type +
-                   '&maxResults=' + items +
-                   '&part=' + 'id,snippet' +
-                   '&fields' + 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle' +
-                   '&q=' + term);
-    results[type] = data.items;
-  };
+
 }]);
 
 app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
@@ -93,17 +83,18 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
   };
   $scope.rest = function (user, pw, method){
     time = Math.floor(Date.now()/1000);
-    hash = sha1(sha1(pw)+time+method)
-    web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile')
+    hash = sha1(sha1(pw)+time+method);
+    web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
   };
 
 });
 
-app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service, web) {
+  //Toggle between log in, sign up, forgot password
+  $scope.state = 0;
 
-  // Called to navigate to the main app
-  $scope.startApp = function() {
-    $state.go('main');
+  $scope.tabTo = function(i) {
+    $scope.state = i;
   };
   $scope.next = function() {
     $ionicSlideBoxDelegate.next();
@@ -111,10 +102,27 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
   $scope.previous = function() {
     $ionicSlideBoxDelegate.previous();
   };
-
   // Called each time the slide changes
   $scope.slideChanged = function(index) {
     $scope.slideIndex = index;
+  };
+
+  $scope.login = function (){
+    time = Math.floor(Date.now()/1000);
+    hash = sha1(sha1(this.pw)+time+'isLoggedIn')
+    var promise = web.get('action='+'isLoggedIn'+'&user='+this.user+'&hash='+hash+"&time="+time+'&billcode=mobile');
+    promise.then(function(data) {
+      if (data.methodResponse == 1)
+      {
+        $state.go('main');
+        $service.user = 0;
+        $service.pw = 0;
+      }
+      else
+        alert('failed');
+    }, function(reason) {
+      console.log('Failed: ' + reason);
+    });
   };
 });
 
