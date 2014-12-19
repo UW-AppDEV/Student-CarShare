@@ -16,7 +16,7 @@ angular.module('ionic.utils', [])
   }
 }]);
 
-var app = angular.module('app', ['ionic', 'ionic.utils', 'ngResource']);
+var app = angular.module('app', ['ionic', 'ionic.utils']);
 
 app.run(function ($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -33,16 +33,17 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   $httpProvider.defaults.useXDomain = true;
   delete $httpProvider.defaults.headers.common['X-Requested-With'];
   $stateProvider
-  .state('page10', {
-    url: '/page10',
-    templateUrl: 'page10.html',
-    controller: 'MainCtrl'
+  .state('intro', {
+    url: '/',
+    templateUrl: 'templates/intro.html',
+    controller: 'IntroCtrl'
   })
-  .state('page11', {
-    url: '/page11',
-    templateUrl: 'page11.html'
+  .state('main', {
+    url: '/main',
+    templateUrl: 'templates/main.html',
+    controller: 'MainCtrl'
   });
-  $urlRouterProvider.otherwise('/page10');
+  $urlRouterProvider.otherwise("/");
 });
 
 
@@ -61,7 +62,7 @@ app.factory('web', function($q, $http, $templateCache) {
   };
 });
 
-app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$resource', function ($window, $rootScope, $q, $localstorage, $http) {
+app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', function ($window, $rootScope, $q, $localstorage, $http) {
   var service = this;
   this.search = function (term, type, items, page) {
     results[type].length = 0;
@@ -76,7 +77,10 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$re
   };
 }]);
 
-app.controller('MainCtrl', function ($scope, $http, $localstorage, $service, web) {
+app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
+  $scope.toIntro = function(){
+    $state.go('intro');
+  }
   $scope.testlocal = $localstorage.get('test', 'local storage is working');
   $scope.test = function () {
     alert($scope.testlocal);
@@ -91,6 +95,26 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $service, web
     time = Math.floor(Date.now()/1000);
     hash = sha1(sha1(pw)+time+method)
     web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile')
+  };
+
+});
+
+app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+
+  // Called to navigate to the main app
+  $scope.startApp = function() {
+    $state.go('main');
+  };
+  $scope.next = function() {
+    $ionicSlideBoxDelegate.next();
+  };
+  $scope.previous = function() {
+    $ionicSlideBoxDelegate.previous();
+  };
+
+  // Called each time the slide changes
+  $scope.slideChanged = function(index) {
+    $scope.slideIndex = index;
   };
 });
 
