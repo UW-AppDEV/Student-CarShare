@@ -38,9 +38,24 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     templateUrl: 'templates/intro.html',
     controller: 'IntroCtrl'
   })
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'IntroCtrl'
+  })
+  .state('signup', {
+    url: '/signup',
+    templateUrl: 'templates/signup.html',
+    controller: 'IntroCtrl'
+  })
   .state('main', {
     url: '/main',
     templateUrl: 'templates/main.html',
+    controller: 'MainCtrl'
+  })
+  .state('page11', {
+    url: '/page11',
+    templateUrl: 'page11.html',
     controller: 'MainCtrl'
   });
   $urlRouterProvider.otherwise("/");
@@ -86,13 +101,14 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
     hash = sha1(sha1(pw)+time+method);
     web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
   };
-
+$scope.navigate = function(){
+    $state.go('page11');
+  };
 });
 
 app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service, web) {
   //Toggle between log in, sign up, forgot password
   $scope.state = 0;
-
   $scope.tabTo = function(i) {
     $scope.state = i;
   };
@@ -106,7 +122,9 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
   $scope.slideChanged = function(index) {
     $scope.slideIndex = index;
   };
-
+  $scope.navigate = function (page){
+    $state.go(page);
+  };
   $scope.login = function (){
     time = Math.floor(Date.now()/1000);
     hash = sha1(sha1(this.pw)+time+'isLoggedIn')
@@ -124,8 +142,4 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
       console.log('Failed: ' + reason);
     });
   };
-});
-
-app.controller('SideCtrl', function ($scope, $http) {
-
 });
