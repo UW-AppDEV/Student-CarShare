@@ -33,68 +33,7 @@
       </div>
     </ion-slide>
     <ion-slide>
-      <div ng-show="state==0">
-        <h3>Log In</h3>
-        <div class="list" style="text-align: left">
-          <form ng-submit="login()">
-            <li class="item item-input">
-              <span class="input-label">Username</span>
-              <input type="text" ng-model="user">
-            </li>
-            <li class="item item-input">
-              <span class="input-label">Password</span>
-              <input type="password" ng-model="pw">
-            </li>
-            <ion-toggle ng-model="pwRemember">
-              Push Notifications
-            </ion-toggle>
-          </form>
-        </div>
-        <div class="spacer" style="height:100px"></div>
-        <button ng-click="login()" class="button button-full button-balanced" style="float:bottom">Log In</button>
-        <!--<button ng-click="tabTo(1)" class="button button-full button-positive" style="float:bottom">Sign Up</button>-->
-        <!--<button ng-click="tabTo(2)" class="button button-full button-positive" style="float:bottom">Forgot Password</button>-->
-      </div>
-      <!--<div ng-show="state==1">
-<h3>Sign Up</h3>
-<div class="list" style="text-align: left">
-<li class="item item-input item-stacked-label">
-<span class="input-label">First Name</span>
-<input type="text" placeholder="John">
-</li>
-<li class="item item-input item-stacked-label">
-<span class="input-label">Last Name</span>
-<input type="text" placeholder="Suhr">
-</li>
-<li class="item item-input item-stacked-label">
-<span class="input-label">Email</span>
-<input type="text" placeholder="john@suhr.com">
-</li>
-</div>
-<button ng-click="" class="button button-full button-positive" style="float:bottom">Sign Up</button>
-<button ng-click="tabTo(0)" class="button button-full button-balanced" style="float:bottom">Log In</button>
-<button ng-click="tabTo(2)" class="button button-full button-positive" style="float:bottom">Forgot Password</button>
-</div>
-<div ng-show="state==2">
-<h3>Forgot Password</h3>
-<div class="list" style="text-align: left">
-<li class="item item-input item-stacked-label">
-<span class="input-label">First Name</span>
-<input type="text" placeholder="John">
-</li>
-<li class="item item-input item-stacked-label">
-<span class="input-label">Last Name</span>
-<input type="text" placeholder="Suhr">
-</li>
-<li class="item item-input item-stacked-label">
-<span class="input-label">Email</span>
-<input type="text" placeholder="john@suhr.com">
-</li>
-</div>
-<button ng-click="" class="button button-full button-positive" style="float:bottom">Submit</button>
-<button ng-click="tabTo(0)" class="button button-full button-balanced" style="float:bottom">Log In</button>
-<button ng-click="tabTo(1)" class="button button-full button-positive" style="float:bottom">Sign Up</button>
-</div>-->
+      <button ng-click="navigate('login')" class="button button-full button-balanced" style="float:bottom">Start</button>
     </ion-slide>
   </ion-slide-box>
 </ion-view>

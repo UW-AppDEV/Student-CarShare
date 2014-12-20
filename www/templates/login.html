@@ -1,0 +1,24 @@
+<ion-view hide-back-button="true" title="Log In">
+  <ion-content>
+    <div class="list" style="text-align: left">
+      <form ng-submit="login()">
+        <li class="item item-input">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="user">
+        </li>
+        <li class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="pw">
+        </li>
+        <ion-toggle ng-model="pwRemember">
+          Remember Password
+        </ion-toggle>
+      </form>
+    </div>
+    <div class="spacer" style="height:100px"></div>
+    <button ng-click="login()" class="button button-full button-balanced" style="float:bottom">Log In</button>
+    <button ng-click="navigate('signup')" class="button button-full button-balanced" style="float:bottom">Sign Up</button>
+    <button ng-click="navigate('forgotpw')" class="button button-full button-balanced" style="float:bottom">Forgot Password</button>
+
+  </ion-content>
+</ion-view>

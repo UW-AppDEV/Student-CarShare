@@ -1,0 +1,25 @@
+<ion-view hide-back-button="true" title="Log In">
+  <ion-content>
+    <div class="list" style="text-align: left">
+      <form ng-submit="login()">
+        <li class="item item-input">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="user">
+        </li>
+        <li class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="pw">
+        </li>
+        <li class="item item-icon-right">
+          Proof of Identity
+          <i class="icon ion-ios-arrow-right"></i>
+        </li>
+      </form>
+    </div>
+    <div class="spacer" style="height:100px"></div>
+    <a class="button icon-right ion-chevron-right button-calm">Learn More</a>
+    <a class="button icon-right ion-ios-arrow-right button-calm">Learn More</a>
+    <button ng-click="login()" class="button button-full button-balanced" style="float:bottom">Submit Application</button>
+    <button ng-click="navigate('login')" class="button button-full button-balanced" style="float:bottom">Back</button>
+  </ion-content>
+</ion-view>
