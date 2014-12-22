@@ -53,12 +53,38 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     templateUrl: 'templates/main.html',
     controller: 'MainCtrl'
   })
-  .state('page11', {
-    url: '/page11',
-    templateUrl: 'page11.html',
-    controller: 'MainCtrl'
-  });
-  $urlRouterProvider.otherwise("/");
+  .state('tab', {
+    url: "/tab",
+    templateUrl: "templates/tabs.html"
+  })
+  .state('tab.dash', {
+    url: '/dash',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/tab-dash.html',
+        controller: 'MainCtrl'
+      }
+    }
+  })
+  .state('tab.reservations', {
+    url: '/reservations',
+    views: {
+      'tab-reservations': {
+        templateUrl: 'templates/tab-reservations.html',
+        controller: 'ReservationCtrl'
+      }
+    }
+  })
+    .state('tab.dash-detail', {
+      url: '/dash/detail',
+      views: {
+        'tab-dash': {
+          templateUrl: 'templates/dash-detail.html',
+          controller: ''
+        }
+      }
+    });
+  $urlRouterProvider.otherwise("/tab");
 });
 
 
@@ -102,7 +128,7 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
     web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
   };
 $scope.navigate = function(){
-    $state.go('page11');
+    $state.go('tab.dash-detail');
   };
 });
 
@@ -132,7 +158,7 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
     promise.then(function(data) {
       if (data.methodResponse == 1)
       {
-        $state.go('main');
+        $state.go('tab');
         $service.user = 0;
         $service.pw = 0;
       }
@@ -142,4 +168,8 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
       console.log('Failed: ' + reason);
     });
   };
+});
+
+app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service, web) {
+
 });
