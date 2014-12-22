@@ -48,11 +48,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     templateUrl: 'templates/signup.html',
     controller: 'IntroCtrl'
   })
-  .state('main', {
-    url: '/main',
-    templateUrl: 'templates/main.html',
-    controller: 'MainCtrl'
-  })
   .state('tab', {
     url: "/tab",
     templateUrl: "templates/tabs.html"
@@ -66,6 +61,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   })
+  .state('tab.dash-detail', {
+    url: '/dash/detail',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/dash-detail.html',
+        controller: ''
+      }
+    }
+  })
   .state('tab.reservations', {
     url: '/reservations',
     views: {
@@ -75,15 +79,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   })
-    .state('tab.dash-detail', {
-      url: '/dash/detail',
-      views: {
-        'tab-dash': {
-          templateUrl: 'templates/dash-detail.html',
-          controller: ''
-        }
+  .state('tab.account', {
+    url: '/account',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/tab-account.html',
+        controller: 'AccountCtrl'
       }
-    });
+    }
+  });
   $urlRouterProvider.otherwise("/tab");
 });
 
@@ -95,7 +99,6 @@ app.factory('web', function($q, $http, $templateCache) {
       var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
       $http.get(url)
       .success(function(data) {
-        console.log(JSON.stringify(data));
         deferred.resolve(data);
       });
       return deferred.promise;
@@ -105,7 +108,22 @@ app.factory('web', function($q, $http, $templateCache) {
 
 app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
   var service = this;
-
+  this.user = '6525';
+  this.pw = 'gamesinstitute';
+  this.fault = {8001: "No Such Reservation"};
+  this.rest = function (user, pw, method, callback){
+    time = Math.floor(Date.now()/1000);
+    hash = sha1(sha1(pw)+time+method)
+    var promise = web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
+    promise.then(function (data){
+      if (data.methodResponse.fault != null)
+        console.log (service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
+      else
+        callback(data);
+    }, function(reason) {
+      console.log('Failed: ' + reason);
+    });
+  };
 }]);
 
 app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
@@ -127,12 +145,12 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
     hash = sha1(sha1(pw)+time+method);
     web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
   };
-$scope.navigate = function(){
+  $scope.navigate = function(){
     $state.go('tab.dash-detail');
   };
 });
 
-app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service, web) {
+app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
   //Toggle between log in, sign up, forgot password
   $scope.state = 0;
   $scope.tabTo = function(i) {
@@ -152,24 +170,50 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
     $state.go(page);
   };
   $scope.login = function (){
-    time = Math.floor(Date.now()/1000);
-    hash = sha1(sha1(this.pw)+time+'isLoggedIn')
-    var promise = web.get('action='+'isLoggedIn'+'&user='+this.user+'&hash='+hash+"&time="+time+'&billcode=mobile');
-    promise.then(function(data) {
+    $scope.temp = [this.user, this.pw];
+    $service.rest(this.user, this.pw, 'isLoggedIn',
+                  function(data){
       if (data.methodResponse == 1)
       {
         $state.go('tab');
-        $service.user = 0;
-        $service.pw = 0;
+        $service.user = $scope.temp[0];
+        $service.pw = $scope.temp[1];
       }
       else
-        alert('failed');
-    }, function(reason) {
-      console.log('Failed: ' + reason);
-    });
+        alert('failed');});
   };
 });
 
-app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service, web) {
+app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
+  $scope.getFutureReservation  = function(){
+    $service.rest($service.user, $service.pw, 'futureReservations',
+                  function(data){console.log(data)});
+  };
+  $scope.getCurrentReservation  = function(){
+    $service.rest($service.user, $service.pw, 'currentReservation',
+                  function(data){//console.log(JSON.stringify(data));
+      if (data.methodResponse.fault == null){}
+      else
+        console.log ($service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
+    });
+  };
+  $scope.getPastReservation  = function(){
+    $service.rest($service.user, $service.pw, 'pastReservations',
+                  function(data){
+      if (data.methodResponse.fault == null){
+        console.log(JSON.stringify(data.methodResponse.DBEntityReservation));
+      }
+      else
+        console.log ($service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
+    });
+  };
+
+});
+app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
+  $scope.getDriverName  = function(){
+    $service.rest($service.user, $service.pw, 'getDriverName',
+                  function(data){$scope.driverName = data.methodResponse;});
+  };
+  $scope.getDriverName();
 
 });
