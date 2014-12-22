@@ -124,6 +124,19 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       console.log('Failed: ' + reason);
     });
   };
+  this.rest = function (method, callback){
+    time = Math.floor(Date.now()/1000);
+    hash = sha1(sha1(service.pw)+time+method)
+    var promise = web.get('action='+method+'&user='+service.user+'&hash='+hash+"&time="+time+'&billcode=mobile');
+    promise.then(function (data){
+      if (data.methodResponse.fault != null)
+        console.log (service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
+      else
+        callback(data);
+    }, function(reason) {
+      console.log('Failed: ' + reason);
+    });
+  };
 }]);
 
 app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
@@ -211,8 +224,7 @@ app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegat
 });
 app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
   $scope.getDriverName  = function(){
-    $service.rest($service.user, $service.pw, 'getDriverName',
-                  function(data){$scope.driverName = data.methodResponse;});
+    $service.rest('getDriverName',function(data){$scope.driverName = data.methodResponse;});
   };
   $scope.getDriverName();
 
