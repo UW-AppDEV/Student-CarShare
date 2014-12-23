@@ -106,7 +106,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   });
-  $urlRouterProvider.otherwise("/");
+  $urlRouterProvider.otherwise("/tab");
 });
 
 
@@ -245,7 +245,8 @@ app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $
     $service.rest('getTimeZone',function(data){$scope.timeZone = data.methodResponse;});
   };
   $scope.getClientPhone  = function(){
-    $service.rest('clientPhone',function(data){$scope.clientPhone = data.methodResponse;});
+    $service.rest('clientPhone',function(data){$scope.clientPhone = data.methodResponse;
+                                              console.log('done');});
   };
   $scope.getAvailabilityForStack = function(){
     $service.rest('availabilityForStack(0, 1, 100000)',function(data){console.log(data)});
