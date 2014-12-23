@@ -87,6 +87,24 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         controller: 'AccountCtrl'
       }
     }
+  })
+  .state('tab.account-locations', {
+    url: '/dash/locations',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/locations.html',
+        controller: 'AccountCtrl'
+      }
+    }
+  })
+  .state('tab.account-messages', {
+    url: '/dash/messages',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/messages.html',
+        controller: 'AccountCtrl'
+      }
+    }
   });
   $urlRouterProvider.otherwise("/tab");
 });
@@ -97,6 +115,7 @@ app.factory('web', function($q, $http, $templateCache) {
     get: function(query) {
       var deferred = $q.defer();
       var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
+      //var url = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
       $http.get(url)
       .success(function(data) {
         deferred.resolve(data);
@@ -110,29 +129,32 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   var service = this;
   this.user = '6525';
   this.pw = 'gamesinstitute';
-  this.fault = {8001: "No Such Reservation"};
-  this.rest = function (user, pw, method, callback){
+  this.rest = function (method, callback, param, user, pw){
+    //OPTIONAL PARAMETERS
+    if (typeof param === 'undefined')
+      param = '';
+    if (typeof user === 'undefined')
+      user = service.user;
+    if (typeof pw === 'undefined')
+      pw = service.pw;
+    //AUTHETICATION
     time = Math.floor(Date.now()/1000);
     hash = sha1(sha1(pw)+time+method)
-    var promise = web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
+    var promise = web.get('action='+method+param+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
     promise.then(function (data){
-      if (data.methodResponse.fault != null)
-        console.log (service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
+      //CHECK FOR ERROR BEFORE CALLBACK
+      if (data.methodResponse == null)
+      {
+        console.log(null);
+      }
+      else if (data.methodResponse.fault != null)
+      {
+        console.log(data.methodResponse.fault.value.struct.member[1].value.string);
+      }
       else
+      {
         callback(data);
-    }, function(reason) {
-      console.log('Failed: ' + reason);
-    });
-  };
-  this.rest = function (method, callback){
-    time = Math.floor(Date.now()/1000);
-    hash = sha1(sha1(service.pw)+time+method)
-    var promise = web.get('action='+method+'&user='+service.user+'&hash='+hash+"&time="+time+'&billcode=mobile');
-    promise.then(function (data){
-      if (data.methodResponse.fault != null)
-        console.log (service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
-      else
-        callback(data);
+      }
     }, function(reason) {
       console.log('Failed: ' + reason);
     });
@@ -161,6 +183,9 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
   $scope.navigate = function(){
     $state.go('tab.dash-detail');
   };
+  $scope.getReservationWithId  = function(id){
+    $service.rest("reservationWithId", function(data){console.log(data.methodResponse);}, "&reservationId="+id);
+  };
 });
 
 app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
@@ -184,7 +209,7 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
   };
   $scope.login = function (){
     $scope.temp = [this.user, this.pw];
-    $service.rest(this.user, this.pw, 'isLoggedIn',
+    $service.rest('isLoggedIn',
                   function(data){
       if (data.methodResponse == 1)
       {
@@ -193,39 +218,56 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
         $service.pw = $scope.temp[1];
       }
       else
-        alert('failed');});
+        alert('failed');},'',this.user, this.pw);
   };
 });
 
 app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
   $scope.getFutureReservation  = function(){
-    $service.rest($service.user, $service.pw, 'futureReservations',
+    $service.rest('futureReservations',
                   function(data){console.log(data)});
   };
   $scope.getCurrentReservation  = function(){
-    $service.rest($service.user, $service.pw, 'currentReservation',
-                  function(data){//console.log(JSON.stringify(data));
-      if (data.methodResponse.fault == null){}
-      else
-        console.log ($service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
-    });
+    $service.rest('currentReservation',
+                  function(data){$scope.reservation.current[0]=data;});
   };
   $scope.getPastReservation  = function(){
-    $service.rest($service.user, $service.pw, 'pastReservations',
-                  function(data){
-      if (data.methodResponse.fault == null){
-        console.log(JSON.stringify(data.methodResponse.DBEntityReservation));
-      }
-      else
-        console.log ($service.fault[data.methodResponse.fault.value.struct.member[0].value.int]);
-    });
+    $service.rest('pastReservations',
+                  function(data){console.log(data.methodResponse.DBEntityReservation);});
   };
 
 });
 app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
+
+  $scope.navigate = function (page){
+    $state.go(page);
+  };
   $scope.getDriverName  = function(){
     $service.rest('getDriverName',function(data){$scope.driverName = data.methodResponse;});
   };
-  $scope.getDriverName();
-
+  $scope.getTimeZone  = function(){
+    $service.rest('getTimeZone',function(data){$scope.timeZone = data.methodResponse;});
+  };
+  $scope.getClientPhone  = function(){
+    $service.rest('clientPhone',function(data){$scope.clientPhone = data.methodResponse;});
+  };
+  $scope.getAvailabilityForStack = function(){
+    $service.rest('availabilityForStack(0, 1, 100000)',function(data){console.log(data)});
+  };
+  $scope.getDriversIntrestingThings = function(){
+    $service.rest('getDriversIntrestingThings', function(data){
+      console.log(data.methodResponse.WSDriversIntrestingThings);
+      $scope.locale=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverLanguageLocale;
+      $scope.timeZone=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.timeZone;
+      $scope.driverName=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverName;
+      $scope.tripTimeResolution=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.tripTimeResolution;
+      $scope.driverLocations=data.methodResponse.WSDriversIntrestingThings.driverLocations.DBDriverLocation;
+      $scope.messages=data.methodResponse.WSDriversIntrestingThings.driverMessages;
+    });
+  };
+  init();
+  function init() {
+    $scope.getDriversIntrestingThings();
+    $scope.getClientPhone();
+  }
 });

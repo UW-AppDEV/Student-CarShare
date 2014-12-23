@@ -1,9 +1,39 @@
 <ion-view view-title="Account">
   <ion-content class="padding">
-    <div class="row">
-      <div class="col">Name</div>
-      <div class="col">{{driverName}}</div>
+    <div class="card">
+      <div class="item item-divider">
+        Information
+      </div>
+      <div class="item item-text-wrap">
+        <div class="row">
+          <div class="col-25">Name</div>
+          <div class="col75">{{driverName}}</div>
+        </div>
+        <div class="row">
+          <div class="col-25">Time Zone</div>
+          <div class="col75">{{timeZone}}</div>
+        </div>
+        <div class="row">
+          <div class="col-25">Call Center</div>
+          <div class="col75">{{clientPhone}}</div>
+        </div>
+        <div class="row">
+          <div class="col-25">Locale</div>
+          <div class="col75">{{locale}}</div>
+        </div>
+      </div>
     </div>
-
+    <div class="card" style="margin-top:0px">
+      <div ng-click="navigate('tab.account-locations')" class="item item-text-wrap item-icon-right">
+        Locations
+        <i class="icon ion-ios7-arrow-right"></i>
+      </div>
+    </div>
+    <div class="card" style="margin-top:0px">
+      <div ng-click="navigate('tab.account-messages')" class="item item-text-wrap item-icon-right">
+        Messages
+        <i class="icon ion-ios7-arrow-right"></i>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
