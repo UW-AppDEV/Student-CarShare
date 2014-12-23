@@ -106,7 +106,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   });
-  $urlRouterProvider.otherwise("/tab");
+  $urlRouterProvider.otherwise("/");
 });
 
 
@@ -189,11 +189,7 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
 });
 
 app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
-  //Toggle between log in, sign up, forgot password
-  $scope.state = 0;
-  $scope.tabTo = function(i) {
-    $scope.state = i;
-  };
+  //Slide Box
   $scope.next = function() {
     $ionicSlideBoxDelegate.next();
   };
