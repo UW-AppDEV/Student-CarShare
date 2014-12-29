@@ -52,7 +52,24 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     url: "/tab",
     templateUrl: "templates/tabs.html"
   })
-
+  .state('tab.dash', {
+    url: '/dash',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/tab-dash.html',
+        controller: 'MainCtrl'
+      }
+    }
+  })
+  .state('tab.dash-detail', {
+    url: '/dash/detail',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/dash-detail.html',
+        controller: ''
+      }
+    }
+  })
   .state('tab.reservations', {
     url: '/reservations',
     views: {
@@ -60,7 +77,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         templateUrl: 'templates/tab-reservations.html',
         controller: 'ReservationCtrl'
       }
-    }  
+    }
   })
   .state('tab.account', {
     url: '/account',
@@ -72,7 +89,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     }
   })
   .state('tab.account-locations', {
-    url: '/account/locations',
+    url: '/dash/locations',
     views: {
       'tab-account': {
         templateUrl: 'templates/locations.html',
@@ -81,38 +98,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     }
   })
   .state('tab.account-messages', {
-    url: '/account/messages',
+    url: '/dash/messages',
     views: {
       'tab-account': {
         templateUrl: 'templates/messages.html',
         controller: 'AccountCtrl'
-      }
-    }
-  })
-  .state('tab.account-dash', {
-    url: '/account/dash',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/dash.html',
-        controller: 'MainCtrl'
-      }
-    }
-  })
-  .state('tab.acount-dash-detail', {
-    url: '/account/dash/detail',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/dash-detail.html',
-        controller: ''
-      }
-    }
-  })
-  .state('tab.locations', {
-    url: '/locations',
-    views: {
-      'tab-locations': {
-        templateUrl: 'templates/tab-locations.html',
-        controller: 'LocationsCtrl'
       }
     }
   });
@@ -191,7 +181,7 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
     web.get('action='+method+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
   };
   $scope.navigate = function(){
-    $state.go('tab.acount-dash-detail');
+    $state.go('tab.dash-detail');
   };
   $scope.getReservationWithId  = function(id){
     $service.rest("reservationWithId", function(data){console.log(data.methodResponse);}, "&reservationId="+id);
@@ -243,11 +233,6 @@ app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegat
   };
 
 });
-
-app.controller('LocationsCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
-
-});
-
 app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
 
   $scope.navigate = function (page){

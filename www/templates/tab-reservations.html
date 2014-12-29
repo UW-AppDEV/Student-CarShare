@@ -1,40 +1,26 @@
-<ion-view hide-nav-bar="true">
-
-  <ion-header-bar class="bar bar-header bar-positive">
-    <h1 class="title">Reservations</h1>
-  </ion-header-bar>
-
+<ion-view view-title="Reservations">
+  <button class="button button-positive button-clear"
+            ng-click="next()">
+      Next
+    </button>
   <ion-content>
-
+    <!--TODO sdfdfsdf
+-->
     <div class="list">
-      <div ng-click="getCurrentReservation()" class="item item-divider">December</div>
-
-      <a class="item item-button-right">
-        <h2>Monday December 29th</h2>
-        <p><i class="icon ion-location"></i> Toronto, 4pm - 6pm</p>
-        <button class="button button-positive button-clear">
-          <i class="icon ion-navicon-round padding"></i>
-        </button>
-      </a>
-
-      <a class="item item-button-right">
-        <h2>Tuesday December 30th</h2>
-        <p><i class="icon ion-location"></i> Guelph, 4pm - 6pm</p>
-        <button class="button button-positive button-clear">
-          <i class="icon ion-navicon-round padding"></i>
-        </button>
-      </a>
-
-      <div ng-click="getFutureReservation()" class="item item-divider">November</div>
-      <a class="item">Item</a>
-      <a class="item">Item</a>
-      <a class="item">Item</a>
-      <div ng-click="getPastReservation()" class="item item-divider">
-        October
+      <div ng-click="getCurrentReservation()" class="item item-divider">
+        Current
       </div>
-      <a class="item">Item</a>
-      <a class="item">Item</a>
-      <a class="item">Item</a>
+
+      <a class="item">
+        Item
+      </a>
+      <div ng-click="getFutureReservation()" class="item item-divider">
+        Future
+      </div>
+
+      <div ng-click="getPastReservation()" class="item item-divider">
+        Past Month
+      </div>
     </div>
 
   </ion-content>
