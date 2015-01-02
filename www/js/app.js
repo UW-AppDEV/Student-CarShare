@@ -1,5 +1,6 @@
-angular.module('ionic.utils', [])
-.factory('$localstorage', ['$window', function ($window) {
+var app = angular.module('app', ['ionic']);
+
+app.factory('$localstorage', ['$window', function ($window) {
   return {
     set: function (key, value) {
       $window.localStorage[key] = value;
@@ -16,7 +17,20 @@ angular.module('ionic.utils', [])
   }
 }]);
 
-var app = angular.module('app', ['ionic', 'ionic.utils']);
+app.factory('web', function($q, $http, $templateCache) {
+  return {
+    get: function(query) {
+      var deferred = $q.defer();
+      var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
+      //var url = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
+      $http.get(url)
+      .success(function(data) {
+        deferred.resolve(data);
+      });
+      return deferred.promise;
+    }
+  };
+});
 
 app.run(function ($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -109,26 +123,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   $urlRouterProvider.otherwise("/tab");
 });
 
-
-app.factory('web', function($q, $http, $templateCache) {
-  return {
-    get: function(query) {
-      var deferred = $q.defer();
-      var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
-      //var url = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
-      $http.get(url)
-      .success(function(data) {
-        deferred.resolve(data);
-      });
-      return deferred.promise;
-    }
-  };
-});
-
 app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
   var service = this;
+  //TESTING ACCOUNT
   this.user = '6525';
   this.pw = 'gamesinstitute';
+  //REAL SETTING - REPLACE TESTING WHEN DONE
+  //this.user = '';
+  //this.pw = '';
+
+  //========================CARSHARE API FUNCTION==========================
   this.rest = function (method, callback, param, user, pw){
     //OPTIONAL PARAMETERS
     if (typeof param === 'undefined')
@@ -159,6 +163,32 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       console.log('Failed: ' + reason);
     });
   };
+  //========================CARSHARE API USE==============================
+  this.getDriverName  = function(){
+    service.rest('getDriverName',function(data){service.driverName = data.methodResponse;});
+  };
+  this.getTimeZone  = function(){
+    service.rest('getTimeZone',function(data){service.timeZone = data.methodResponse;});
+  };
+  this.getClientPhone  = function(){
+    service.rest('clientPhone',function(data){service.clientPhone = data.methodResponse;});
+  };
+  this.getAvailabilityForStack = function(){
+    service.rest('availabilityForStack(0, 1, 100000)',function(data){console.log(data)});
+  };
+  this.getDriversIntrestingThings = function(){
+    service.rest('getDriversIntrestingThings', function(data){
+      service.locale=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverLanguageLocale;
+      service.timeZone=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.timeZone;
+      service.driverName=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverName;
+      service.tripTimeResolution=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.tripTimeResolution;
+      service.driverLocations=data.methodResponse.WSDriversIntrestingThings.driverLocations.DBDriverLocation;
+      service.messages=data.methodResponse.WSDriversIntrestingThings.driverMessages;
+    });
+  };
+  //============================CALLING API UPON APP START==========
+  service.getDriversIntrestingThings();
+  service.getClientPhone();
 }]);
 
 app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
@@ -233,38 +263,13 @@ app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegat
   };
 
 });
-app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
 
+app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
+  //CAN ADD TO EVERY SCOPE
+  //Bind service variables to scope
+  $scope.service = $service;
+  //Navigation (can also use ui.sref)
   $scope.navigate = function (page){
     $state.go(page);
   };
-  $scope.getDriverName  = function(){
-    $service.rest('getDriverName',function(data){$scope.driverName = data.methodResponse;});
-  };
-  $scope.getTimeZone  = function(){
-    $service.rest('getTimeZone',function(data){$scope.timeZone = data.methodResponse;});
-  };
-  $scope.getClientPhone  = function(){
-    $service.rest('clientPhone',function(data){$scope.clientPhone = data.methodResponse;
-                                              console.log('done');});
-  };
-  $scope.getAvailabilityForStack = function(){
-    $service.rest('availabilityForStack(0, 1, 100000)',function(data){console.log(data)});
-  };
-  $scope.getDriversIntrestingThings = function(){
-    $service.rest('getDriversIntrestingThings', function(data){
-      console.log(data.methodResponse.WSDriversIntrestingThings);
-      $scope.locale=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverLanguageLocale;
-      $scope.timeZone=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.timeZone;
-      $scope.driverName=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverName;
-      $scope.tripTimeResolution=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.tripTimeResolution;
-      $scope.driverLocations=data.methodResponse.WSDriversIntrestingThings.driverLocations.DBDriverLocation;
-      $scope.messages=data.methodResponse.WSDriversIntrestingThings.driverMessages;
-    });
-  };
-  init();
-  function init() {
-    $scope.getDriversIntrestingThings();
-    $scope.getClientPhone();
-  }
 });
