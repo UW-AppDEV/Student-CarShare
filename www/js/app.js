@@ -26,7 +26,7 @@ app.factory('web', function($q, $http, $templateCache) {
       //LOCAL METHOD - FOR TESTING
       //var url = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
       //PHP METHOD - IN USE
-      var url = 'http://localhost:84/index.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
+      var url = 'http://jerryzhou.net/cors.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
       $http.get(url)
       .success(function(data) {
         deferred.resolve(data);
