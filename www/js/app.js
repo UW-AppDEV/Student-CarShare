@@ -173,8 +173,8 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   this.getClientPhone  = function(){
     service.rest('clientPhone',function(data){service.clientPhone = data.methodResponse;});
   };
-  this.getAvailabilityForStack = function(){
-    service.rest('availabilityForStack(0, 1, 100000)',function(data){console.log(data)});
+  this.getTripEstimate = function(){
+    service.rest('tripEstimate',function(data){console.log(data)},"&stackId="+'100'+"&startTime="+'1421280000'+"&endTime="+'1421301600');
   };
   this.getDriversIntrestingThings = function(){
     service.rest('getDriversIntrestingThings', function(data){
@@ -189,6 +189,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   //============================CALLING API UPON APP START==========
   service.getDriversIntrestingThings();
   service.getClientPhone();
+  service.getTripEstimate();
 }]);
 
 app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
