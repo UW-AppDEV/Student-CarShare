@@ -21,8 +21,12 @@ app.factory('web', function($q, $http, $templateCache) {
   return {
     get: function(query) {
       var deferred = $q.defer();
-      var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
+      //RUBY METHOD - REMOVED
+      //var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
+      //LOCAL METHOD - FOR TESTING
       //var url = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
+      //PHP METHOD - IN USE
+      var url = 'http://localhost:84/index.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
       $http.get(url)
       .success(function(data) {
         deferred.resolve(data);
@@ -147,13 +151,13 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     var promise = web.get('action='+method+param+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
     promise.then(function (data){
       //CHECK FOR ERROR BEFORE CALLBACK
-      if (data.methodResponse == null)
+      if (data == null)
       {
         console.log(null);
       }
-      else if (data.methodResponse.fault != null)
+      else if (data.fault != null)
       {
-        console.log(data.methodResponse.fault.value.struct.member[1].value.string);
+        console.log(data.fault.value.struct.member[1].value.string);
       }
       else
       {
@@ -165,25 +169,25 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   };
   //========================CARSHARE API USE==============================
   this.getDriverName  = function(){
-    service.rest('getDriverName',function(data){service.driverName = data.methodResponse;});
+    service.rest('getDriverName',function(data){service.driverName = data[0];});
   };
   this.getTimeZone  = function(){
-    service.rest('getTimeZone',function(data){service.timeZone = data.methodResponse;});
+    service.rest('getTimeZone',function(data){service.timeZone = data[0];});
   };
   this.getClientPhone  = function(){
-    service.rest('clientPhone',function(data){service.clientPhone = data.methodResponse;});
+    service.rest('clientPhone',function(data){service.clientPhone = data[0];});
   };
   this.getTripEstimate = function(){
     service.rest('tripEstimate',function(data){console.log(data)},"&stackId="+'100'+"&startTime="+'1421280000'+"&endTime="+'1421301600');
   };
   this.getDriversIntrestingThings = function(){
     service.rest('getDriversIntrestingThings', function(data){
-      service.locale=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverLanguageLocale;
-      service.timeZone=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.timeZone;
-      service.driverName=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.driverName;
-      service.tripTimeResolution=data.methodResponse.WSDriversIntrestingThings.WSGetConfigurationResult.tripTimeResolution;
-      service.driverLocations=data.methodResponse.WSDriversIntrestingThings.driverLocations.DBDriverLocation;
-      service.messages=data.methodResponse.WSDriversIntrestingThings.driverMessages;
+      service.locale=data.WSDriversIntrestingThings.WSGetConfigurationResult.driverLanguageLocale;
+      service.timeZone=data.WSDriversIntrestingThings.WSGetConfigurationResult.timeZone;
+      service.driverName=data.WSDriversIntrestingThings.WSGetConfigurationResult.driverName;
+      service.tripTimeResolution=data.WSDriversIntrestingThings.WSGetConfigurationResult.tripTimeResolution;
+      service.driverLocations=data.WSDriversIntrestingThings.driverLocations.DBDriverLocation;
+      service.messages=data.WSDriversIntrestingThings.driverMessages;
     });
   };
   //============================CALLING API UPON APP START==========
@@ -262,7 +266,6 @@ app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegat
     $service.rest('pastReservations',
                   function(data){console.log(data.methodResponse.DBEntityReservation);});
   };
-
 });
 
 app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
