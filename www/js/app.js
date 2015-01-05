@@ -153,7 +153,6 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       //CHECK FOR ERROR BEFORE CALLBACK
       if (data == null)
       {
-        console.log(null);
       }
       else if (data.fault != null)
       {
@@ -167,6 +166,10 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       console.log('Failed: ' + reason);
     });
   };
+  //Rounds time to 30 minute intervals
+  this.roundTime  = function(time){
+    return time-(time%1800);
+  };
   //========================CARSHARE API USE==============================
   this.getDriverName  = function(){
     service.rest('getDriverName',function(data){service.driverName = data[0];});
@@ -178,7 +181,10 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     service.rest('clientPhone',function(data){service.clientPhone = data[0];});
   };
   this.getTripEstimate = function(){
-    service.rest('tripEstimate',function(data){console.log(data)},"&stackId="+'100'+"&startTime="+'1421280000'+"&endTime="+'1421301600');
+    service.rest('tripEstimate',function(data){console.log(data)},"&stackId="+"11"+"&startTime="+'1421280000'+"&endTime="+'1421301600');
+  };
+  this.getResultsFromStackFilter = function(){
+    service.rest('resultsFromStackFilter',function(data){console.log(data)},"&aStackFilter[startTime]="+service.roundTime(Math.floor(Date.now()/1000))+"&aStackFilter[endTime]="+service.roundTime(Math.floor(Date.now()/1000+1800))+"&aStackFilter[latitude]="+"43.467121"+"&aStackFilter[longitude]="+"-80.546756"+"&includeStack="+'true');
   };
   this.getDriversIntrestingThings = function(){
     service.rest('getDriversIntrestingThings', function(data){
@@ -194,6 +200,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   service.getDriversIntrestingThings();
   service.getClientPhone();
   service.getTripEstimate();
+  service.getResultsFromStackFilter();
 }]);
 
 app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
@@ -242,7 +249,7 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
     $scope.temp = [this.user, this.pw];
     $service.rest('isLoggedIn',
                   function(data){
-      if (data.methodResponse == 1)
+      if (data[0] == 1)
       {
         $state.go('tab');
         $service.user = $scope.temp[0];
@@ -264,7 +271,7 @@ app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegat
   };
   $scope.getPastReservation  = function(){
     $service.rest('pastReservations',
-                  function(data){console.log(data.methodResponse.DBEntityReservation);});
+                  function(data){console.log(data.DBEntityReservation);});
   };
 });
 
