@@ -91,6 +91,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   })
+
+  .state('tab.reservation-detail', {
+      url: '/reservations/:id',
+      views: {
+        'tab-reservations': {
+          templateUrl: 'templates/reservation-detail.html',
+          controller: 'ReservationDetailCtrl'
+        }
+      }
+    })
   .state('tab.account', {
     url: '/account',
     views: {
@@ -130,6 +140,35 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   //REAL SETTING - REPLACE TESTING WHEN DONE
   //this.user = '';
   //this.pw = '';
+
+  //========================DATE AND TIME FUNCTIONS========================
+  //Rounds time to 30 minute intervals
+  this.roundTime  = function(time){
+    return time-(time%1800);
+  };
+  this.convertDate = function(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp*1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = month + ' ' + date + ', '  + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
+  };
+
+  //=========================SCOPE INTERFACING FUNCTIONS===================
+  this.getReservation = function(id){
+    for(var i=0; i<service.pastReservation.length; i++)
+    {
+      if (service.pastReservation[i].id == id)
+      {
+        return service.pastReservation[i];
+      }
+    }
+  };
   //========================CARSHARE API FUNCTION==========================
   this.rest = function (method, callback, param, user, pw){
     //SERVER ADDRESS
@@ -167,22 +206,6 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       console.log('Failed: ' + reason);
     });
   };
-  //Rounds time to 30 minute intervals
-  this.roundTime  = function(time){
-    return time-(time%1800);
-  };
-  this.convertDate = function(UNIX_timestamp){
-    var a = new Date(UNIX_timestamp*1000);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-    return time;
-  };
   //========================CARSHARE API USE==============================
   this.getDriverName  = function(){
     service.rest('getDriverName',function(data){service.driverName = data[0];});
@@ -219,7 +242,10 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     service.rest('pastReservations', function(data){
       service.pastReservation = [];
       if (data.length===undefined)
+      {
         service.pastReservation.push(data.DBEntityReservation);
+        service.pastReservation[0].startDate = service.convertDate(service.pastReservation[0].startStamp);
+      }
       else
       {
         for (var i = 0; i<data.length; i++)
@@ -305,6 +331,12 @@ app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegat
   $scope.navigate = function (page){
     $state.go(page);
   };
+});
+
+app.controller('ReservationDetailCtrl', function($scope, $stateParams, $service) {
+  //$scope.reservation = $service.pastReservation[$stateParams.id];
+  $scope.reservationId = $stateParams.id;
+  $scope.reservation = $service.getReservation($scope.reservationId);
 });
 
 app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
