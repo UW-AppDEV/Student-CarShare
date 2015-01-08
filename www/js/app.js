@@ -21,13 +21,7 @@ app.factory('web', function($q, $http, $templateCache) {
   return {
     get: function(query) {
       var deferred = $q.defer();
-      //RUBY METHOD - REMOVED
-      //var url = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
-      //LOCAL METHOD - FOR TESTING
-      //var url = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
-      //PHP METHOD - IN USE
-      var url = 'http://jerryzhou.net/cors.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?' + query;
-      $http.get(url)
+      $http.get(query)
       .success(function(data) {
         deferred.resolve(data);
       });
@@ -128,6 +122,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 });
 
 app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
+  //INITIALIZE VARIABLES
   var service = this;
   //TESTING ACCOUNT
   this.user = '6525';
@@ -135,9 +130,15 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   //REAL SETTING - REPLACE TESTING WHEN DONE
   //this.user = '';
   //this.pw = '';
-
   //========================CARSHARE API FUNCTION==========================
   this.rest = function (method, callback, param, user, pw){
+    //SERVER ADDRESS
+    //RUBY METHOD - REMOVED
+    //var adr = 'http://168.235.155.40:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
+    //LOCAL METHOD - FOR TESTING
+    //var adr = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
+    //PHP METHOD - IN USE
+    var adr = 'http://jerryzhou.net/cors.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
     //OPTIONAL PARAMETERS
     if (typeof param === 'undefined')
       param = '';
@@ -148,7 +149,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     //AUTHETICATION
     time = Math.floor(Date.now()/1000);
     hash = sha1(sha1(pw)+time+method)
-    var promise = web.get('action='+method+param+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
+    var promise = web.get(adr + 'action='+method+param+'&user='+user+'&hash='+hash+"&time="+time+'&billcode=mobile');
     promise.then(function (data){
       //CHECK FOR ERROR BEFORE CALLBACK
       if (data == null)
@@ -169,6 +170,18 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   //Rounds time to 30 minute intervals
   this.roundTime  = function(time){
     return time-(time%1800);
+  };
+  this.convertDate = function(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp*1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
   };
   //========================CARSHARE API USE==============================
   this.getDriverName  = function(){
@@ -196,11 +209,34 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       service.messages=data.WSDriversIntrestingThings.driverMessages;
     });
   };
+  this.getFutureReservation  = function(){
+    service.rest('futureReservations', function(data){console.log(data)});
+  };
+  this.getCurrentReservation  = function(){
+    service.rest('currentReservation', function(data){console.log(data);});
+  };
+  this.getPastReservation  = function(){
+    service.rest('pastReservations', function(data){
+      service.pastReservation = [];
+      if (data.length===undefined)
+        service.pastReservation.push(data.DBEntityReservation);
+      else
+      {
+        for (var i = 0; i<data.length; i++)
+        {
+          service.pastReservation.push(data.DBEntityReservation[i]);
+        }
+      }
+      console.log(service.pastReservation[0]);
+    });
+  };
   //============================CALLING API UPON APP START==========
   service.getDriversIntrestingThings();
   service.getClientPhone();
   service.getTripEstimate();
   service.getResultsFromStackFilter();
+  service.getPastReservation();
+  service.getFutureReservation();
 }]);
 
 app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, $service, web, $state) {
@@ -261,17 +297,13 @@ app.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, $se
 });
 
 app.controller('ReservationCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
-  $scope.getFutureReservation  = function(){
-    $service.rest('futureReservations',
-                  function(data){console.log(data)});
-  };
-  $scope.getCurrentReservation  = function(){
-    $service.rest('currentReservation',
-                  function(data){$scope.reservation.current[0]=data;});
-  };
-  $scope.getPastReservation  = function(){
-    $service.rest('pastReservations',
-                  function(data){console.log(data.DBEntityReservation);});
+
+  //CAN ADD TO EVERY SCOPE
+  //Bind service variables to scope
+  $scope.service = $service;
+  //Navigation (can also use ui.sref)
+  $scope.navigate = function (page){
+    $state.go(page);
   };
 });
 
