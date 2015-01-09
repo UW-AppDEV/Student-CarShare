@@ -1,0 +1,56 @@
+<ion-view hide-back-button="true" view-title="Location">
+    <ion-content has-header="true" has-footer="true" scroll="false">
+
+        <!--Javascript Google Maps-->
+        <!--div id="GoogleMap">
+        </div-->
+        <button class="button button-royal button-full"
+                ng-click="getMyLocation()">
+            View My Location
+        </button>
+        <span ng-bind="myLocation"></span>
+        <!--Angular Google Maps-->
+        <div data-ng-controller="MapCtrl" class="map-container">
+            <ui-gmap-google-map id="map"
+                                center="map.center"
+                                pan="map.pan"
+                                zoom="map.zoom"
+                                draggable="true"
+                                refresh="map.refresh"
+                                options="map.options"
+                                events="map.events"
+                                bounds="map.bounds">
+
+                <ui-gmap-markers models="markers"
+                                 idKey="'idKey'"
+                                 coords="'self'"
+                                 options="'options'"
+                                 click="'onClick'">
+                    <ui-gmap-windows show="'show'" options="'windowOptions'" closeClick="'onWindowClose'" ng-cloak>
+                        <!--The code is commented out because window content can be set in the model
+                        div ng-non-bindable>
+                            <h4  >{{city}}</h4>
+                            <p>{{address}}</p>
+                                <a class="scs-button orange" href="">The link to the location {{link}}, to be implemented</a>
+                        </div-->
+                            </ui-gmap-windows>
+                                </ui-gmap-markers>
+
+            </ui-gmap-google-map>
+        </div>
+
+        <!--Khashayar's Method-->
+        <!--TODO This works, but no dragging-->
+        <!--iframe height="300" frameborder="0" style="border:0;width:100%;margin-bottom:10px;"
+                ng-src="{{trustSrc(GoogleMapsSrc)}}">
+
+        </iframe-->
+
+        <!--input type="text" ng-model="address" class="input-label" placeholder="search location here"/>
+        <button class="button button-positive button-full" ng-click="updateAddress(address)">search</button>
+        <button class="button button-dark button-full"
+                ng-click="testRefresh()">
+            refresh to this location
+        </button-->
+    </ion-content>
+</ion-view>
