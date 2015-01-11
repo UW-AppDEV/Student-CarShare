@@ -1,14 +1,7 @@
 <ion-view hide-back-button="true" view-title="Location">
     <ion-content has-header="true" has-footer="true" scroll="false">
 
-        <!--Javascript Google Maps-->
-        <!--div id="GoogleMap">
-        </div-->
-        <button class="button button-royal button-full"
-                ng-click="getMyLocation()">
-            View My Location
-        </button>
-        <span ng-bind="myLocation"></span>
+
         <!--Angular Google Maps-->
         <div data-ng-controller="MapCtrl" class="map-container">
             <ui-gmap-google-map id="map"
@@ -38,7 +31,11 @@
 
             </ui-gmap-google-map>
         </div>
-
+        <button class="button button-royal button-full"
+                ng-click="getMyLocation()">
+            View My Location
+        </button>
+        <label>Your location is...</label><span ng-bind="myLocation"></span>
         <!--Khashayar's Method-->
         <!--TODO This works, but no dragging-->
         <!--iframe height="300" frameborder="0" style="border:0;width:100%;margin-bottom:10px;"
