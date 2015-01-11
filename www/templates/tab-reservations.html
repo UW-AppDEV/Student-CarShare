@@ -1,0 +1,66 @@
+<ion-view view-title="Reservations">
+  <button class="button button-positive button-clear"
+          ng-click="next()">
+    Next
+  </button>
+  <ion-content>
+    <div class="list">
+      <div ng-click="getCurrentReservation()" class="item item-divider">
+        Current
+      </div>
+
+      <a class="item">
+        Item
+      </a>
+      <div ng-click="getFutureReservation()" class="item item-divider">
+        Future
+      </div>
+
+      <div ng-click="getPastReservation()" class="item item-divider">
+        Past Month
+      </div>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="item in service.pastReservation" type="item-text-wrap" href="#/tab/reservations/{{item.id}}">
+        <div class="item item-avatar">
+          <img ng-src="{{item.DBEntityStack.DBEntityVehicleType.imageDest}}">
+          <h2>Marty McFly</h2>
+          <p>November 05, 1955</p>
+        </div>
+        <div class="item item-body">
+          <p>
+            {{item.DBEntityStack.DBEntityVehicleType.descr}}
+            {{item.DBEntityStack.lotDescription}}
+            {{item.estimate}}
+            {{item.id}}
+            {{item.startDate}}
+          </p>
+          <p>
+            <a href="#" class="subdued">1 Like</a>
+            <a href="#" class="subdued">5 Comments</a>
+          </p>
+        </div>
+      </div>
+      </ion-item>
+      <div ng-repeat="item in service.pastReservation" href="#/account">
+        <div class="item item-avatar">
+          <img ng-src="{{item.DBEntityStack.DBEntityVehicleType.imageDest}}">
+          <h2>Marty McFly</h2>
+          <p>November 05, 1955</p>
+        </div>
+        <div class="item item-body">
+          <p>
+            {{item.DBEntityStack.DBEntityVehicleType.descr}}
+            {{item.DBEntityStack.lotDescription}}
+            {{item.estimate}}
+            {{item.id}}
+            {{item.startDate}}
+          </p>
+          <p>
+            <a href="#" class="subdued">1 Like</a>
+            <a href="#" class="subdued">5 Comments</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

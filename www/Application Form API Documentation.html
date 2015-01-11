@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application Form API Documentation</title>
+</head>
+<style>
+
+    body {
+        font-family: Helvetica, Verdana, Sans-Serif;
+        font-size: 10pt;
+        background: #F1F1F1;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #header {
+        background: #242424;
+        border-bottom: solid 12px #BF0F11;
+        padding: 15px;
+    }
+
+    #header div {
+        width: 800px;
+        margin: auto;
+    }
+
+    #content {
+        border: solid 3px #E4E4E4;
+        background: #FFF;
+        width: 800px;
+        margin: 15px auto;
+        padding: 10px;
+    }
+
+    dl, .apicall {
+        margin-bottom: 15px;
+        clear: both;
+        overflow: auto;
+        padding: 10px;
+    }
+
+    body > div > dl, .apicall {
+        margin: 0px;
+        border-bottom: solid 1px #E4E4E4;
+    }
+
+    body > div > dl:last-of-type {
+        border-bottom: none;
+    }
+
+    dt {
+        float: left;
+        width: 150px;
+        clear: both;
+        text-align: right;
+        line-height: 25px;
+        color: #BF0F11;
+    }
+
+    dd {
+        float: left;
+        line-height: 25px;
+        font-style: italic;
+    }
+
+    body > div > dl > dt:first-child {
+        display: none;
+    }
+
+    body > div > dl > dd:first-of-type {
+        font-style: normal;
+        font-weight: bold;
+        margin-left: 0px;
+    }
+
+    dd dl {
+        border: solid 2px #EEE;
+        background: #F9F9F9;
+    }
+
+    dd dl dt {
+        width: 250px;
+        text-align: left;
+    }
+
+    a {
+        color: #BF0F11;
+    }
+
+    .title {
+        color: #BF0F11;
+        font-style: italic;
+        border-bottom: solid 2px #E4E4E4;
+        margin: 0px;
+        padding: 0px 0px 10px 0px;
+    }
+
+    .code {
+        font-family: monospace;
+        white-space: pre;
+        background: #EEE;
+        border: dashed 1px #CCC;
+        padding: 10px;
+        overflow: auto;
+    }
+
+    #menu {
+        float: left;
+        margin-left: -210px;
+        position: fixed;
+        border: solid 3px #E4E4E4;
+        padding: 10px;
+        width: 160px;
+        background: #FEFEFE;
+        margin-top: -13px;
+    }
+
+    #menu div {
+        line-height: 30px;
+        font-size: 15px;
+    }
+
+    .section {
+        margin-top: -15px;
+        margin-bottom: 50px;
+    }
+
+    .section .section {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+
+    h4 {
+        margin-bottom: 0px;
+    }
+
+    h5 {
+        font-style: italic;
+        font-size: 100%;
+        color: #333;
+        font-size: 100%;
+    }
+    
+    ul, li {
+        margin-top: 5px;
+    }
+
+    ul ul {
+        margin-top: 10px;
+    }
+
+    ul ul li {
+        font-style: italic;
+    }
+
+    ul ul div {
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    .command {
+        color: #BF0F11;
+        font-size: 120%;
+    }
+</style>
+<body>
+    <div id="header">
+        <div>
+            <img alt="Metavera Solutions Inc." title="Metavera Solutions Inc." src="http://www.metavera.com/wp-content/themes/metavera/images/logo.png" />
+        </div>
+    </div>
+    <div id="content">
+    <div class="apicall"><h1>Overview of WSUser</h1><div class='section'>https://reserve.studentcarshare.ca/webservices/WSUser/WSRest</div><p><br />
+ The WSUser service provides similar functionality to the member facing reservation site. <br />
+ It allows you to check availability, make a reservation, change a reservation, and even swipe. <br />
+ into the vehicle (Invers only). <br />
+<br />
+To get started, see the "Quick Start Guide" on Confluence, or read the "Authentication" section<br />
+below. <br />
+</p></div><div class='apicall'><h3>Authenication</h3><p><br />
+ All calls to this service must be authenticated with the four pieces of data below <br />
+ using HTTP GET or POST.<br />
+<br />
+  <b>user</b> is the driver id ( ie. 999-1)<br />
+ <br />
+  <b>clientTime</b> the time of the request in a Unix timestamp<br />
+<br />
+  <b>hash</b> is a MD5 or SHA1 (newer customers must use SHA1) <br />
+ comprised of the following bits of data joined in the exact order border:<br />
+  <ol><li>A MD5 or SHA1 hash of the driver's password</li><br />
+  <li>The clientTime (see above)</li><br />
+  <li>The method you wish to call</li><br />
+  </ol><br />
+    Hash can be provided as both a MD5 and a SHA1 as two parameters <br />
+    hash[] = ab242f... //MD5<br />
+    hash[] = 123ea4f ... //SHA1<br />
+<br />
+ <div class ='code'> //Sample php code to generate this hash would look like<br />
+ $hash = sha1(sha1($password).$clientTime.$method);</div><br />
+<br />
+ <h3>Billcode</h3><br />
+ Billcode should be specified on all requests.  Valid usage can be the following:<br />
+ <ul><br />
+ <li>The bill code is used to determine what is the source of request.</li><br />
+ <li>ivr - indicating this was done from IVR/phone based reservation system</li><br />
+ <li>mobile - generic mobile site</li><br />
+ <li>iphone - iPhone site</li><br />
+ <li>android - coming from Android site</li><br />
+ <li>service - coming from a generic service request</li><br />
+ </ul><br />
+</p></div><div class="apicall"><h3>Example</h3><p>The following request gets the list of all available amenities.</p><h4>Request</h4><p class="code">https://reserve.studentcarshare.ca/webservices/WSUser/WSRest?action=amenities&user=999&hash=35146d843170a7a1c759cb4acaa728f27362107f&time=1366984415&billcode=mobile</p></div><div class="apicall"><h4>Response</h4><p class="code">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;methodResponse&gt;
+    &lt;WSAmenity&gt;
+        &lt;name&gt;air_conditioning&lt;/name&gt;
+        &lt;description&gt;A/C&lt;/description&gt;
+    &lt;/WSAmenity&gt;
+    &lt;WSAmenity&gt;
+        &lt;name&gt;dog_free&lt;/name&gt;
+        &lt;description&gt;Pet Friendly&lt;/description&gt;
+    &lt;/WSAmenity&gt;
+    &lt;WSAmenity&gt;
+        &lt;name&gt;fold_rear_seat&lt;/name&gt;
+        &lt;description&gt;Folding Rear Seats&lt;/description&gt;
+    &lt;/WSAmenity&gt;
+    &lt;WSAmenity&gt;
+        &lt;name&gt;bike_rack&lt;/name&gt;
+        &lt;description&gt;Bike Rack&lt;/description&gt;
+    &lt;/WSAmenity&gt;
+&lt;/methodResponse&gt;
+</p></div><h1>Actions</h1><div class='apicall'><h3>availabilityForStack(stackId, startTime, endTime)</h3><p><pre>
+      Returns a list of available times for the given stack
+      and start/end times.
+     
+      @param integer $stackId The id of the stack
+      @param integer $startTime	A Unix timestamp
+      @param integer $endTime	A Unix timestamp
+	 
+      @return <a href='?class=DBTimeSlot'>DBTimeSlot</a> []
+     </pre></p></div><div class='apicall'><h3>tripTimeResolution()</h3><p><pre>
+      Returns the divisor in minutes that
+      a reservation start and end time must fall on.
+      The minutes in the hour of the start
+      and end time must be divisible by this number.
+     
+      @return integer
+     </pre></p></div><div class='apicall'><h3>tripEstimate(stackId, startTime, endTime)</h3><p><pre>
+      Returns the dollar value, including currency symbol,
+      estimate for the given time frame, stack and driver. 
+     
+      @param integer $stackId The id of the stack
+      @param integer $startTime	A Unix timestamp
+      @param integer $endTime A Unix timestamp
+	  
+      @return <a href='?class=DBEntityRateAdjustments'>DBEntityRateAdjustments</a>     </pre></p></div><div class='apicall'><h3>tripEstimateAndOptionalAdjustments(stackId, startTime, endTime, optionalAdjustmentIds)</h3><p><pre>
+      Returns a <a href='?class=DBEntityRateAdjustments'>DBEntityRateAdjustments</a> (Trip estimate) 
+      for the given time frame, stack, driver, and optional 
+      adjustments. 
+     
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+      @param integer[] $optionalAdjustmentIds An array of optional adjustment ids
+	  
+      @return <a href='?class=DBEntityRateAdjustments'>DBEntityRateAdjustments</a>     </pre></p></div><div class='apicall'><h3>tripEstimateForReservationWithId(reservationId, stackId, startTime, endTime)</h3><p><pre>
+      Returns the dollar value (including currency symbol)
+      estimate for an existing reservation with the given
+      timeframe, stack, and driver.
+     
+      This will maintain the billing stack, and should be used whenever re-generating an
+      estimate for an existing reservation.
+     
+      @param integer $reservationId The id of the reservation
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+	  
+      @return string
+     </pre></p></div><div class='apicall'><h3>makeReservation(stackId, startTime, endTime, memo)</h3><p><pre>
+      Reserves a vehicle in the selected stack for this member
+      at the specified time. This function returns true if the request
+      was successful or an exception if it was not successful.
+	 
+      As this function only returns true if successful, consider using
+      makeReservationGetReservation instead
+     
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+      @param string $memo (Optional) A short description for this trip
+	  
+      @return boolean
+     </pre></p></div><div class='apicall'><h3>makeReservationGetId(stackId, startTime, endTime, memo)</h3><p><pre>
+      Reserves a vehicle in the selected stack for this member
+      at the specified time. This function returns the reservation id
+      if the request was successful or an exception if it was not 
+      successful.
+	  
+      As this function only returns the reservation id if successful, 
+      consider using makeReservationGetReservation instead
+     
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+      @param string $memo (Optional) A short description for this trip
+	  
+      @return integer
+     </pre></p></div><div class='apicall'><h3>makeReservationGetReservation(stackId, startTime, endTime, memo)</h3><p><pre>
+      Reserves a vehicle in the selected stack for this member
+      at the specified time. This function returns a <a href='?class=DBEntityReservation'>DBEntityReservation</a> if
+      the request was successful or an exception if it was not successful.
+     
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+      @param string $memo (Optional) A short description for this trip
+	  
+      @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>     </pre></p></div><div class='apicall'><h3>makeReservationWithOptionalAdjustmentIds(stackId, startTime, endTime, optionalAdjustmentIds, memo)</h3><p><pre>
+      Reserves a vehicle in the selected stack for this member
+      at the specified time, with any optional adjustments specified in the array. 
+      This function returns true if the request was successful or an exception 
+      if it was not successful.
+     
+      As this function only returns true if successful, 
+      consider using makeReservationWithOptionalAdjustmentIdsGetReservation instead
+	 
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+      @param integer[] $optionalAdjustments  (Optional) An array of optional adjustment ids
+      @param string $memo (Optional+) A short description for this trip
+	 
+      +Depending on configuration, a memo may not be optional
+	 
+      @return boolean
+     </pre></p></div><div class='apicall'><h3>makeReservationWithOptionalAdjustmentIdsGetId(stackId, startTime, endTime, optionalAdjustmentIds, memo)</h3><p><pre>
+      Reserves a vehicle in the selected stack for this member
+      at the specified time, with any optional adjustments specified in the array. 
+      This function returns the reservation id if the request was successful or 
+      an exception if it was not successful.
+     
+      As this function only returns the reservation id if successful, 
+      consider using makeReservationWithOptionalAdjustmentIdsGetReservation instead
+	 
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+      @param integer[] $optionalAdjustments  (Optional) An array of optional adjustment ids
+      @param string $memo (Optional+) A short description for this trip
+	 
+      +Depending on configuration, a memo may not be optional
+     
+      @return integer
+     </pre></p></div><div class='apicall'><h3>makeReservationWithOptionalAdjustmentIdsGetReservation(stackId, startTime, endTime, optionalAdjustmentIds, memo)</h3><p><pre>
+      Reserves a vehicle in the selected stack for this member
+      at the specified time, with any optional adjustments specified in the array. 
+      This function returns a <a href='?class=DBEntityReservation'>DBEntityReservation</a> if the request was successful or 
+      an exception if it was not successful.
+     
+	 
+      @param integer $stackId The id of the stack
+      @param integer $startTime A Unix timestamp
+      @param integer $endTime A Unix timestamp
+      @param integer[] $optionalAdjustments  (Optional) An array of optional adjustment ids
+      @param string $memo (Optional+) A short description for this trip
+	 
+      +Depending on configuration, a memo may not be optional
+     
+      @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>     </pre></p></div><div class='apicall'><h3>currentReservation()</h3><p><pre>
+     Returns a current reservation if there is one,
+     otherwise throws an WSNoSuchReservation
+    
+     @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>    </pre></p></div><div class='apicall'><h3>futureReservations()</h3><p><pre>
+     Returns a set of future reservations
+    
+     @return <a href='?class=DBEntityReservation'>DBEntityReservation</a> []
+    </pre></p></div><div class='apicall'><h3>pastReservations()</h3><p><pre>
+     Returns a set of past reservations from the last month.
+    
+     @return <a href='?class=DBEntityReservation'>DBEntityReservation</a> []
+    </pre></p></div><div class='apicall'><h3>pastTrips()</h3><p><pre>
+     Returns a list of past reservations in <a href='?class=DBEntityTrip'>DBEntityTrip</a> format
+     for the last month.
+    
+     This function is useful for retrieving distance or actual time
+     of a trip
+    
+     @return DBEntityTrip[]
+    </pre></p></div><div class='apicall'><h3>checkReservationDateTime(stamp)</h3><p><pre>
+      Check if the specified time is valid as a
+      start or end time of a reservation, this function returns
+      true if it is valid, or throws an exception if it is not
+     
+      @param integer $stamp A Unixtimestamp
+	 
+      @return boolean
+     </pre></p></div><div class='apicall'><h3>reservationWithId(reservationId)</h3><p><pre>
+      Returns the reservation for the logged in user with the
+      specified ID
+     
+      @param integer $reservationid The reservation id
+	  
+      @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>     </pre></p></div><div class='apicall'><h3>extendReservationWithId(reservationId, endTime)</h3><p><pre>
+     Extends a reservation with the specified ID until the 
+     specified data time. Returns true on success, 
+     throws an exception if the time is invalid.
+    
+     @param integer $reservationId The reservation id
+     @param integer $endTime A Unix timestamp
+	 
+     @return boolean
+    </pre></p></div><div class='apicall'><h3>extendReservationWithIdGetReservation(reservationId, endTime)</h3><p><pre>
+     Extends a reservation with the specified ID until the 
+     specified data time. Returns a <a href='?class=DBEntityReservation'>DBEntityReservation</a> 
+     on success, throws an exception if the time is invalid.
+    
+     @param integer $reservationId The reservation id
+     @param integer $endTime A Unix timestamp
+	
+     @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>    </pre></p></div><div class='apicall'><h3>earlyReturnForReservationWithId(reservationId, endTime)</h3><p><pre>
+     Shortens a reservation with the specified ID to the 
+     specified end time. Returns true on success, throws 
+     an exception if the time is invalid.
+    
+     @param integer $reservationId The reservation id
+     @param integer $endTime A Unix timestamp
+	
+     @return boolean
+    </pre></p></div><div class='apicall'><h3>endNowReturnForReservationWithId(reservationId)</h3><p><pre>
+     Ends a reservation with the specified ID now. 
+     This will make the vehicle available to another member. 
+     This function throws an exception if the request was 
+     unsuccessful.
+    
+     @param integer $reservationId The reservation id
+	
+     @return WSStatusWithCode
+    </pre></p></div><div class='apicall'><h3>earlyReturnForReservationWithIdGetReservation(reservationId, endTime)</h3><p><pre>
+     Shortens a reservation with the specified ID to the 
+     specified end time. Returns a <a href='?class=DBEntityReservation'>DBEntityReservation</a> 
+     on success, throws an exception if the time is invalid.
+    
+     @param integer $reservationId The reservation id
+     @param integer $endTime A Unix timestamp
+	
+     @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>    </pre></p></div><div class='apicall'><h3>earlyAriveForReservationWithId(reservationId, startTime)</h3><p><pre>
+     Shortens the start time of a reservation with the specified ID 
+     to the specified start time. Returns true on success,
+     throws an exception if the time is invalid.
+	
+     @param integer $reservationId The reservation id
+     @param integer $startTime A Unix timestamp
+	 
+     @return boolean
+    </pre></p></div><div class='apicall'><h3>earlyAriveForReservationWithIdGetReservation(reservationId, startTime)</h3><p><pre>
+     Shortens the start time of a reservation with the specified ID 
+     to the specified start time. Returns a <a href='?class=DBEntityReservation'>DBEntityReservation</a> on 
+     success, throws an exception if the time is invalid.
+	
+     @param integer $reservationId The reservation id
+     @param integer $startTime A Unix timestamp
+	
+     @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>    </pre></p></div><div class='apicall'><h3>editReservationTimes(reservationId, startTime, endTime)</h3><p><pre>
+     Modify the reservation time of the reservation with the
+     specified ID. Returns true on success, throws an 
+     exception if the time is invalid.
+	
+     @param integer $reservationId The reservation id
+     @param integer $startTime A Unix timestamp
+     @param integer $startTime A Unix timestamp
+	 
+     @return boolean
+    </pre></p></div><div class='apicall'><h3>editReservationTimesGetReservation(reservationId, startTime, endTime)</h3><p><pre>
+     Modify the reservation time of the reservation with the
+     specified ID. Returns a <a href='?class=DBEntityReservation'>DBEntityReservation</a> on success,
+     throws an exception if the time is invalid.
+	
+     @param integer $reservationId The reservation id
+     @param integer $startTime A Unix timestamp
+     @param integer $startTime A Unix timestamp
+	 
+      @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>     </pre></p></div><div class='apicall'><h3>allVehicleTypes()</h3><p><pre>
+      Return all valid vehicle types
+     
+      @return DBEntityVehicleType[]
+     </pre></p></div><div class='apicall'><h3>clientPhone()</h3><p><pre>
+     Returns the phone number of the call centre
+    
+     @return string
+    </pre></p></div><div class='apicall'><h3>amenities()</h3><p><pre>
+     Returns the available amenities for vehicles.
+     These can be used for filtering search results.
+    
+     @return WSAmenity []
+    </pre></p></div><div class='apicall'><h3>resultsFromStackFilter(aStackFilter, includeStack)</h3><p><pre>
+      Filters vehicle availability with the parameters specified
+      in $aStackFilter. An array of <a href='?class=DBEntityStack'>DBEntityStack</a> will be returned
+      ordered by the best availability. A maximum of 30 results will
+      be returned.
+	 
+      See the full documentation for more usage details for this function.
+     
+      @param <a href='?class=WSStackFilter'>WSStackFilter</a> $aStackFilter An array of filter parameters 
+      @param boolean $includeStack Just set this to true
+	  
+      @return DBRankedStacks[]
+     </pre></p></div><div class='apicall'><h3>getTimeZone()</h3><p><pre>
+     Gets the client's time zone
+    
+     @return string
+    </pre></p></div><div class='apicall'><h3>stackForId(stackId, time)</h3><p><pre>
+     Returns a <a href='?class=DBEntityStack'>DBEntityStack</a> for the specified stack ID.
+     You can use this function to retrieve more information about
+     the lot and the vehicle. You can optionally filter by time.
+    
+     @param integer $stackId The id of the stack
+     @param integer $time (Optional) An Unix timestamp
+	
+     @return <a href='?class=DBEntityStack'>DBEntityStack</a>    </pre></p></div><div class='apicall'><h3>getLocale()</h3><p><pre>
+      Returns an array containing locale information for the client.
+     
+      @return <a href='?class=WSLocale'>WSLocale</a>     </pre></p></div><div class='apicall'><h3>getDriverLocations()</h3><p><pre>
+      Returns an array of driver locations
+     
+      @return <a href='?class=DBDriverLocation'>DBDriverLocation</a> []
+     </pre></p></div><div class='apicall'><h3>getDriverName()</h3><p><pre>
+      Return the driver's name.
+     
+      @return string
+     </pre></p></div><div class='apicall'><h3>cancelReservationWithId(reservationId)</h3><p><pre>
+      Cancels a reservation for this logged in user.
+	 
+      You should use cancelReservationWithIdGetReservation
+      as this function will not return true if sucessful. 
+     
+      @param integer $reservationId The reservation id
+     </pre></p></div><div class='apicall'><h3>cancelReservationWithIdGetReservation(reservationId)</h3><p><pre>
+      Cancels a reservation for this logged in user
+     
+      @param integer $reservationId The reservation id
+	  
+      @return <a href='?class=DBEntityReservation'>DBEntityReservation</a>     </pre></p></div><div class='apicall'><h3>getConfiguration()</h3><p><pre>
+     Returns useful information about the current
+     Autovera configuration, such as time zone, trip
+     time resolution, current driver name, etc. This 
+     can be used to reduce the number of requests to
+     the server.
+	
+     See <a href='?class=WSGetConfigurationResult'>WSGetConfigurationResult</a> for more details.
+	
+     @return <a href='?class=WSGetConfigurationResult'>WSGetConfigurationResult</a>    </pre></p></div><div class='apicall'><h3>getDriversIntrestingThings()</h3><p><pre>
+     Returns useful information about this driver, such as
+     current reservations, messages, and saved locations. 
+    
+     See WSDriversIntrestingThings for more details. Both
+     typos cannot be fixed, so don't ask.	
+	
+     @return WSDriversIntrestingThings
+	</pre></p></div><div class='apicall'><h3>getCurrentAndFutureReservations()</h3><p><pre>
+     Returns a set of current reservations and all future reservations.
+     current and future reservations will be separated in the xml response.
+	
+     @return <a href='?class=WSGetCurrentAndFutureReservationsResult'>WSGetCurrentAndFutureReservationsResult</a>    </pre></p></div><div class='apicall'><h3>getDriverMessages()</h3><p><pre>
+      Returns an array of messages for the logged in driver.
+     
+      @return <a href='?class=DBEntityMessage'>DBEntityMessage</a> []
+     </pre></p></div><div class='apicall'><h3>getCurrentAndFutureReservationsAndDriverMessages()</h3><p><pre>
+     Returns a set of current reservations and all future reservations.
+     current and future reservations will be separated in the xml response.
+     This function will also return an array of messages for the logged in driver.
+    
+     @return [WSGetCurrentAndFutureReservationsResult, <a href='?class=DBEntityMessage'>DBEntityMessage</a> []]
+     </pre></p></div><div class='apicall'><h3>getReservationMessages(reservationID)</h3><p><pre>
+      Returns an array of messages for the specified reservation.
+      These messages include stack, vehicle, and lot messages.
+     
+      @param integer $reservationID The reservation id
+	 
+      @return <a href='?class=DBEntityMessage'>DBEntityMessage</a> []
+     </pre></p></div><div class='apicall'><h3>getStackMessages(stackId, startTime)</h3><p><pre>
+      Returns an array of messages for the specified stack.
+      These messages include stack, vehicle, and lot messages.
+      It is possible that a message is no longer viewable at a 
+      certain time, therefore a time stamp is required.
+     
+      @param integer $stackId The id for the stack
+      @param integer $startTime A Unix timestamp
+      @return <a href='?class=DBEntityMessage'>DBEntityMessage</a> []
+     </pre></p></div><div class='apicall'><h3>hasLinkedDriver()</h3><p><pre>
+      Returns whether the logged in driver has a linked driver.
+     
+      @return boolean
+     </pre></p></div><div class='apicall'><h3>getOtherDriverAccountType()</h3><p><pre>
+      Checks whether the logged in driver has a linked driver and returns
+      a text description of the other driver's account type.
+     
+      This is to be used when providing a link to switch accounts.
+     
+      @return string
+     </pre></p></div><div class='apicall'><h3>allMemberProblemTypes()</h3><p><pre>
+      Return all the valid problem types that this member can enter
+     
+      @return <a href='?class=DBEntityProblemType'>DBEntityProblemType</a> []
+     </pre></p></div><div class='apicall'><h3>submitProblem(problemType, reservationId, message)</h3><p><pre>
+      Submit a problem for this driver 
+     
+      @param String $problemType The problem type
+      @param integer $reservationId The reservation id
+      @param String $message A description of the problem
+     
+      @return boolean
+	</pre></p></div><div class='apicall'><h3>startTripById(tripId)</h3><p><pre>
+      Allows you to start a trip if 
+       1) The vehicle on the trip does not have tech
+       2) The trip is active
+       3) The trip has not yet been started 
+     
+      Only works with single vehicle stack model
+     
+      @param integer $tripId The trip id
+     
+      @return <a href='?class=DBEntityTrip'>DBEntityTrip</a>     </pre></p></div><div class='apicall'><h3>endTripById(tripId, endOdo)</h3><p><pre>
+      Sets the end time and end odo or a trip id
+       1) The vehicle on the trip does not have tech
+       2) The trip was started with startTripById
+       3) The trip has not been marked as over
+     
+      Only works with single vehicle stack model
+     
+      @param integer $tripId The id of the trip
+      @param integer $endOdo The ending odometer value
+     
+      @return <a href='?class=DBEntityTrip'>DBEntityTrip</a></pre></p></div><div class='apicall'><h3>vehicleById(vehicleId)</h3><p><pre>
+      Returns a vehicle from the given vehicle id
+     
+      @param string $vehicleId
+      @return <a href='?class=DBEntityVehicle'>DBEntityVehicle</a>     </pre></p></div><div class='apicall'><h3>getDriverLanguageLocale()</h3><p><pre>
+      Get the locale of the current user.
+      
+      This is useful for multi language customers who may want to
+      switch languages depending on the user.
+     
+     </pre></p></div><div class='apicall'><h3>markReadOnceMessageAsRead(messageId)</h3><p><pre>
+      Marks a mandatory acknowledgement message as read.
+      The desktop site requires certain messages to be acknowledged before
+      the member can continue. This function will do the same thing.
+     
+      @return boolean
+     </pre></p></div><div class='apicall'><h3>isLoggedInGetConfiguration()</h3><p><pre>
+      Returns configuration details if the supplied authentication
+      information is correct. This saves a separate call to isLoggedIn.
+     
+      @return <a href='?class=WSGetConfigurationResult'>WSGetConfigurationResult</a>     </pre></p></div><div class='apicall'><h3>virtualSwipeIn()</h3><p><pre>
+      Allows virtual swipe in to start a trip if
+       1) The driver has a reservation
+       2) The trip is not active and not complete
+      Return swipe id on success, otherwise throws an exception.
+     
+      @return integer
+     </pre></p></div><div class='apicall'><h3>virtualSwipeOut()</h3><p><pre>
+      Allows virtual swipe out to end a trip if
+       1) The driver has a reservation
+       2) The trip is not complete
+      Return swipe id on success, otherwise throws an exception.
+     
+      @return integer
+     </pre></p></div><div class='apicall'><h3>getVirtualSwipeStatus(swipeId)</h3><p><pre>
+      Returns either one of the following status:
+	      status      &#124; description
+	   1) "unknown"   &#124; "Unknown"
+	   2) "sentwait"  &#124; "Waiting to be Sent"
+	   3) "sentav"    &#124; "Sent from Autovera"
+	   4) "sent"      &#124; "Sent to Device"
+	   5) "sentack"   &#124; "Received by Device"
+	   6) "sentnoack" &#124; "Sent Without Acknowledgement"
+	   7) "received"  &#124; "Received from Device"
+	   8) "error"     &#124; "Communication Error"
+	   9) "svcerror"  &#124; "Service Error"
+	  10) "abort"     &#124; "Aborted"
+     
+      @param integer $swipeId
+      @return string
+     </pre></p></div><div class='apicall'><h3>isLoggedIn()</h3><p><pre>
+       Returns true if the supplied authentication
+       information is correct
+       throws an authentication exception if
+       the supplied authentication information is incorrect
+      
+       @return boolean
+      </pre></p></div><div class='apicall'><h3>getClass()</h3><p><pre></pre></p></div>
+    </div>
+</body>
+</html>

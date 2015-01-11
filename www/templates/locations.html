@@ -1,0 +1,16 @@
+<ion-view view-title="Locations">
+  <ion-nav-buttons side="right">
+    <button class="button button-positive button-clear no-animation"
+            ng-click="next()">
+      Add
+    </button>
+  </ion-nav-buttons>
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="item in service.driverLocations">
+        {{item.description}}
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-view>

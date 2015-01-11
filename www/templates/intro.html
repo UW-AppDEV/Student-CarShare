@@ -1,0 +1,39 @@
+<ion-view view-title="Intro">
+  <ion-nav-buttons side="left">
+    <button class="button button-positive button-clear no-animation"
+            ng-click="previous()" ng-show="slideIndex > 0">
+      Previous
+    </button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button button-positive button-clear no-animation"
+            ng-click="next()" ng-show="slideIndex != 2">
+      Next
+    </button>
+  </ion-nav-buttons>
+  <ion-slide-box on-slide-changed="slideChanged(index)">
+    <ion-slide>
+      <h3>Thank you for choosing this app!</h3>
+      <div id="logo">
+        <img src="http://code.ionicframework.com/assets/img/app_icon.png">
+      </div>
+      <p>
+        This is some promotion for carshare etc.
+      </p>
+    </ion-slide>
+    <ion-slide>
+      <h3>Instructions</h3>
+      <div id="list">
+        <h5>Just three steps:</h5>
+        <ol>
+          <li>instructions</li>
+          <li>instructions</li>
+          <li>instructions</li>
+        </ol>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <button ng-click="navigate('login')" class="button button-full button-balanced" style="float:bottom">Start</button>
+    </ion-slide>
+  </ion-slide-box>
+</ion-view>
