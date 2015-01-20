@@ -142,10 +142,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
   //INITIALIZE VARIABLES
   var service = this;
-  //TESTING ACCOUNT
-  //this.user = '6525';
-  //this.pw = 'gamesinstitute';
-  //STAGINg ACCOUNT
+  //STAGING ACCOUNT
   this.user = '9738';
   this.pw = '1234';
   //REAL SETTING - REPLACE TESTING WHEN DONE
