@@ -136,15 +136,18 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   });
-  $urlRouterProvider.otherwise("/tab");
+  $urlRouterProvider.otherwise("/");
 });
 
 app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
   //INITIALIZE VARIABLES
   var service = this;
   //TESTING ACCOUNT
-  this.user = '6525';
-  this.pw = 'gamesinstitute';
+  //this.user = '6525';
+  //this.pw = 'gamesinstitute';
+  //STAGINg ACCOUNT
+  this.user = '9738';
+  this.pw = '1234';
   //REAL SETTING - REPLACE TESTING WHEN DONE
   //this.user = '';
   //this.pw = '';
@@ -185,7 +188,8 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     //LOCAL METHOD - FOR TESTING
     //var adr = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
     //PHP METHOD - IN USE
-    var adr = 'http://jerryzhou.net/cors.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
+    //var adr = 'http://jerryzhou.net/cors.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
+    var adr = 'http://jerryzhou.net/cors.php?https://staging.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
     //OPTIONAL PARAMETERS
     if (typeof param === 'undefined')
       param = '';
