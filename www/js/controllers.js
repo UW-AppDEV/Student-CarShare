@@ -73,6 +73,17 @@ app.controller('ReservationDetailCtrl', function($scope, $stateParams, $service)
   $scope.reservation = $service.getReservation($scope.reservationId);
 });
 
+app.controller('ReservationNewCtrl', function($scope, $service, $state) {
+  $scope.service = $service;
+  $scope.navigate = function (page){
+    $state.go(page);
+  };
+});
+
+app.controller('ReservationSearchCtrl', function($scope, $service) {
+  $scope.service = $service;
+});
+
 app.controller('AccountCtrl', function($scope, $state, $ionicSlideBoxDelegate, $service) {
   //CAN ADD TO EVERY SCOPE
   //Bind service variables to scope

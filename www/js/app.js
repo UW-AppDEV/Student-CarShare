@@ -99,13 +99,30 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   })
-
   .state('tab.reservation-detail', {
     url: '/reservations/:id',
     views: {
       'tab-reservations': {
         templateUrl: 'templates/reservation-detail.html',
         controller: 'ReservationDetailCtrl'
+      }
+    }
+  })
+  .state('tab.reservation-new', {
+    url: '/reservations/new',
+    views: {
+      'tab-reservations': {
+        templateUrl: 'templates/reservation-new.html',
+        controller: 'ReservationNewCtrl'
+      }
+    }
+  })
+  .state('tab.reservation-search', {
+    url: '/reservations/search',
+    views: {
+      'tab-reservations': {
+        templateUrl: 'templates/reservation-search.html',
+        controller: 'ReservationSearchCtrl'
       }
     }
   })
@@ -136,7 +153,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   });
-  $urlRouterProvider.otherwise("/");
+  $urlRouterProvider.otherwise("/tab");
 });
 
 app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
@@ -166,6 +183,23 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     var time = month + ' ' + date + ', '  + year + ' ' + hour + ':' + min + ':' + sec ;
     return time;
   };
+  this.searchSettings = function(){
+    service.searchSetting.start.time = service.roundTime(Math.floor(Date.now()/1000));
+    service.searchSetting.end.time = service.roundTime(Math.floor(Date.now()/1000+10800));
+    service.searchSetting.start.year = service.searchSetting.start.time.getYear();
+    service.searchSetting.start.month = service.searchSetting.start.time.getMonth();
+    service.searchSetting.start.date = service.searchSetting.start.time.getDate();
+    service.searchSetting.start.hour = service.searchSetting.start.time.getHours();
+    service.searchSetting.start.min = service.searchSetting.start.time.getMinutes();
+    service.searchSetting.end.year = service.searchSetting.end.time.getYear();
+    service.searchSetting.end.month = service.searchSetting.end.time.getMonth();
+    service.searchSetting.end.date = service.searchSetting.end.time.getDate();
+    service.searchSetting.end.hour = service.searchSetting.end.time.getHours();
+    service.searchSetting.end.min = service.searchSetting.end.time.getMinutes();
+  }
+  this.convertUnixTime = function(year, month, day, hour, min){
+    return (new Date(year+"/"+month+"/"+day+" "+hour+":"+min+":00").getTime()/1000);
+  }
 
   //=========================SCOPE INTERFACING FUNCTIONS===================
   this.getReservation = function(id){
@@ -229,7 +263,19 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     service.rest('tripEstimate',function(data){console.log(data)},"&stackId="+"11"+"&startTime="+'1421280000'+"&endTime="+'1421301600');
   };
   this.getResultsFromStackFilter = function(){
-    service.rest('resultsFromStackFilter',function(data){console.log(data)},"&aStackFilter[startTime]="+service.roundTime(Math.floor(Date.now()/1000))+"&aStackFilter[endTime]="+service.roundTime(Math.floor(Date.now()/1000+1800))+"&aStackFilter[latitude]="+"43.467121"+"&aStackFilter[longitude]="+"-80.546756"+"&includeStack="+'true');
+    service.rest('resultsFromStackFilter',function(data){
+      service.avaliableStacks = [];
+      if (Object.getOwnPropertyNames(data).length === 0)
+      {
+      }
+      else
+      {
+          service.avaliableStacks=data.DBRankedStacks;
+      }
+      console.log(service.avaliableStacks);
+    },"&aStackFilter[startTime]="+service.roundTime(Math.floor(Date.now()/1000))+
+                 "&aStackFilter[endTime]="+service.roundTime(Math.floor(Date.now()/1000+1800))
+                 +"&aStackFilter[latitude]="+"43.467121"+"&aStackFilter[longitude]="+"-80.546756"+"&includeStack="+'true');
   };
   this.getDriversIntrestingThings = function(){
     service.rest('getDriversIntrestingThings', function(data){
