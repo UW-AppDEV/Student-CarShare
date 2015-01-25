@@ -1,0 +1,10 @@
+<ion-view view-title="New Reservation">
+  <ion-nav-buttons side="right">
+    <button ng-click="navigate('tab.reservation-search')" class="button button-icon icon ion-ios7-search"></button>
+  </ion-nav-buttons>
+  <ion-content>
+    <ion-item class="" ng-repeat="item in service.avaliableStacks" type="item-text-wrap" href="#/tab/reservations/{{item.id}}">
+      {{item.DBEntityStack.descr}}
+    </ion-item>
+  </ion-content>
+</ion-view>
