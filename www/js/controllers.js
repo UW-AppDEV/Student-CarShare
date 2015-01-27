@@ -25,6 +25,17 @@ app.controller('MainCtrl', function ($scope, $http, $localstorage, $ionicModal, 
             console.log(data.methodResponse);
         }, "&reservationId=" + id);
     };
+    $("#example_id").ionRangeSlider({
+            hide_min_max: true,
+            min: 0,
+            max: 5000,
+            from: 1000,
+            to: 4000,
+            type: 'double',
+            step: 1,
+            prefix: "$",
+            grid: true
+        });
 });
 
 app.controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate, $service) {
