@@ -103,7 +103,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
         //var adr = 'http://localhost:2000/https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
         //PHP METHOD - IN USE
         //var adr = 'http://jerryzhou.net/cors.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
-        var adr = 'http://jerryzhou.net/cors.php?https://staging.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
+        var adr = 'http://jerryzhou.net/cors.php?http://staging.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
         //OPTIONAL PARAMETERS
         if (typeof param === 'undefined')
             param = '';
