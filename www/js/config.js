@@ -1,3 +1,14 @@
+app.run(function ($ionicPlatform) {
+    $ionicPlatform.ready(function () {
+      if (window.cordova && window.cordova.plugins.Keyboard) {
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        }
+        if (window.StatusBar) {
+            StatusBar.styleDefault();
+        }
+    });
+});
+
 app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -81,6 +92,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
                 'tab-reservations': {
                     templateUrl: 'templates/reservation-search.html',
                     controller: 'ReservationSearchCtrl'
+                }
+            }
+        })
+        .state('tab.reservation-book', {
+            url: '/reservations/book/:id',
+            views: {
+                'tab-reservations': {
+                    templateUrl: 'templates/reservation-book.html',
+                    controller: 'ReservationBookCtrl'
                 }
             }
         })
