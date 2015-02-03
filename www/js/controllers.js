@@ -102,14 +102,34 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
 
 app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlideBoxDelegate, $service) {
   //$scope.reservation = $service.pastReservation[$stateParams.id];
-  $scope.timetable = [["6:00", "6:30", "7:00", "7:30", "8:00", "8:30"],
-                      ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"],
-                      ["12:00", "12:30", "1:00", "1:30", "2:00", "2:30"],
-                      ["3:00", "3:30", "4:00", "4:30", "5:00", "5:30"],
-                      ["6:00", "6:30", "7:00", "7:30", "8:00", "8:30"],
-                      ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30"],
-                      ["12:00", "12:30", "1:00", "1:30", "2:00", "2:30"],
-                      ["3:00", "3:30", "4:00", "4:30", "5:00", "5:30"]];
+  /*
+  $scope.timetable = new Array();
+  for (i=0;i<$service.timetable.length;i++){
+    var row =[];
+    for (i2=0;i2<$service.timetable[0].length;i2++){
+      row.push({"time":$service.timetable[i][i2],
+               "row":i,
+               "col":i2});
+    }
+    $scope.timetable.push(row);
+  }*/
+  $scope.timetable = $service.timetable;
+  for (i=0;i<$scope.timetable.length;i++){
+    for (i2=0;i2<$scope.timetable[0].length;i2++){
+      $scope.timetable[i][i2].row = i;
+      $scope.timetable[i][i2].col = i2;
+      if ($scope.timetable[i][i2].ampm=="AM")
+        $scope.timetable[i][i2].style="{'background-color':'#6DCCE0',";
+      else if ($scope.timetable[i][i2].ampm=="PM")
+        $scope.timetable[i][i2].style="{'background-color':'#86C335',";
+      if ($scope.timetable[i][i2].row==0)
+        $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("'border-top-style':'none',");
+      if ($scope.timetable[i][i2].col==0)
+        $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("'border-left-style':'none',");
+      $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("}");
+    }
+  }
+
 
   $scope.stackId = $stateParams.id;
   $scope.stack = $service.getStack($scope.stackId);

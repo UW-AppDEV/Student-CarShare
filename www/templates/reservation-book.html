@@ -9,14 +9,15 @@
         </div>
         <div class="item item-text-wrap" style="margin:0px; padding:0px">
           <div ng-repeat="row in timetable" class="row">
-            <div ng-repeat="col in row" ng-style="bg" class="col" style="border-top-style: solid; border-left-style: solid; border-width:1px;  text-align: center;">
-              <p>{{col}}</p>
+            <div ng-repeat="col in row" ng-style="{{col.style}}" class="col" style="border-top-style: solid; border-left-style: solid; border-width:1px;  text-align: center;">
+              <p>{{col.time}}</p>
+              <i class="icon ion-close-round icon-accessory"></i>
             </div>
           </div>
           <div class="row">
-  <div class="col col-33">.col</div>
-  <div class="col col-33 col-offset-33">.col</div>
-</div>
+            <div class="col col-33">.col</div>
+            <div class="col col-33 col-offset-33">.col</div>
+          </div>
         </div>
       </div>
       <p>

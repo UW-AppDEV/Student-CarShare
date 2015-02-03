@@ -93,6 +93,30 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     }
     return service.avaliableStacks[0];
   };
+  this.timetable = [[{time:"6:00", ampm:"AM"}, {"time":"6:30", "ampm":"AM"},
+                     {time:"7:00", "ampm":"AM"}, {"time":"7:30", "ampm":"AM"},
+                     {time:"8:00", "ampm":"AM"}, {"time":"8:30", "ampm":"AM"}],
+                    [{time:"9:00", "ampm":"AM"}, {"time":"9:30", "ampm":"AM"},
+                     {time:"10:00", "ampm":"AM"}, {"time":"10:30", "ampm":"AM"},
+                     {time:"11:00", "ampm":"AM"}, {"time":"11:30", "ampm":"AM"}],
+                    [{time:"12:00", "ampm":"PM"}, {"time":"12:30", "ampm":"PM"},
+                     {time:"1:00", "ampm":"PM"}, {"time":"1:30", "ampm":"PM"},
+                     {time:"2:00", "ampm":"PM"}, {"time":"2:30", "ampm":"PM"}],
+                    [{time:"3:00", "ampm":"PM"}, {"time":"3:30", "ampm":"PM"},
+                     {time:"4:00", "ampm":"PM"}, {"time":"4:30", "ampm":"PM"},
+                     {time:"5:00", "ampm":"PM"}, {"time":"5:30", "ampm":"PM"}],
+                    [{"time":"6:00", "ampm":"PM"}, {"time":"6:30", "ampm":"PM"},
+                     {"time":"7:00", "ampm":"PM"}, {"time":"7:30", "ampm":"PM"},
+                     {"time":"8:00", "ampm":"PM"}, {"time":"8:30", "ampm":"PM"}],
+                    [{"time":"9:00", "ampm":"PM"}, {"time":"9:30", "ampm":"PM"},
+                     {"time":"10:00", "ampm":"PM"}, {"time":"10:30", "ampm":"PM"},
+                     {"time":"11:00", "ampm":"PM"}, {"time":"11:30", "ampm":"PM"}],
+                    [{"time":"12:00", "ampm":"AM"}, {"time":"12:30", "ampm":"AM"},
+                     {"time":"1:00", "ampm":"AM"}, {"time":"1:30", "ampm":"AM"},
+                     {"time":"2:00", "ampm":"AM"}, {"time":"2:30", "ampm":"AM"}],
+                    [{"time":"3:00", "ampm":"AM"}, {"time":"3:30", "ampm":"AM"},
+                     {"time":"4:00", "ampm":"AM"}, {"time":"4:30", "ampm":"AM"},
+                     {"time":"5:00", "ampm":"AM"}, {"time":"5:30", "ampm":"AM"}]];
   //========================CARSHARE API FUNCTION==========================
   this.rest = function (method, callback, param, user, pw) {
     //SERVER ADDRESS
