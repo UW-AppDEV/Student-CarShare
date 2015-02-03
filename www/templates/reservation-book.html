@@ -10,13 +10,18 @@
         <div class="item item-text-wrap" style="margin:0px; padding:0px">
           <div ng-repeat="row in timetable" class="row">
             <div ng-repeat="col in row" ng-style="{{col.style}}" class="col" style="border-top-style: solid; border-left-style: solid; border-width:1px;  text-align: center;">
-              <p>{{col.time}}</p>
-              <i class="icon ion-close-round icon-accessory"></i>
+              <i ng-show="col.state==0" class="icon ion-close-round icon-accessory"></i>
+              <p ng-show="col.state==1">{{col.time}}</p>
+              <i ng-show="col.state==2" class="icon ion-checkmark-round icon-accessory"></i>
             </div>
           </div>
           <div class="row">
-            <div class="col col-33">.col</div>
-            <div class="col col-33 col-offset-33">.col</div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"><p style="float:right">&nbspAM</p><i class="icon ion-ios7-photos calm" style="float:right"></i></div>
+            <div class="col"><p style="float:right">&nbspPM</p><i class="icon ion-ios7-photos balanced" style="float:right"></i></div>
           </div>
         </div>
       </div>

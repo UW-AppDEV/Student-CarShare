@@ -101,19 +101,7 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
 });
 
 app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlideBoxDelegate, $service) {
-  //$scope.reservation = $service.pastReservation[$stateParams.id];
-  /*
-  $scope.timetable = new Array();
-  for (i=0;i<$service.timetable.length;i++){
-    var row =[];
-    for (i2=0;i2<$service.timetable[0].length;i2++){
-      row.push({"time":$service.timetable[i][i2],
-               "row":i,
-               "col":i2});
-    }
-    $scope.timetable.push(row);
-  }*/
-  $scope.timetable = $service.timetable;
+  $scope.timetable = $service.makeTimetable(1,24);
   for (i=0;i<$scope.timetable.length;i++){
     for (i2=0;i2<$scope.timetable[0].length;i2++){
       $scope.timetable[i][i2].row = i;
@@ -129,7 +117,6 @@ app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlid
       $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("}");
     }
   }
-
 
   $scope.stackId = $stateParams.id;
   $scope.stack = $service.getStack($scope.stackId);
