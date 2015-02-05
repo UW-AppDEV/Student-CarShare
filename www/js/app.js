@@ -43,6 +43,11 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   //this.pw = '';
 
   //========================DATE AND TIME FUNCTIONS========================
+  //Converts array time to unix time
+  this.arrayToUnix = function (time){
+    var day = Math.floor(new Date().valueOf()/1000) - Math.floor(new Date().valueOf()/1000)%86400;
+    return day+time*1800;
+  }
   //Rounds time to 30 minute intervals
   this.roundTime = function (time) {
     return time - (time % 1800);
@@ -99,6 +104,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     var count = 0;
     for (i=0; i<timetable.length; i++){
       for (i2=0; i2<timetable[0].length;i2++){
+        timetable[i][i2].index=i*6+i2;
         if (count>=start && count<=end)
           timetable[i][i2].state = 1;
         else
@@ -161,12 +167,13 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       service.clientPhone = data[0];
     });
   };
-  this.getTripEstimate = function () {
+  this.getTripEstimate = function (stackId, startTime, endTime, callback) {
     service.rest('tripEstimate', function (data) {
-      console.log(data)
-    }, "&stackId=" + "11" + "&startTime=" + '1421280000' + "&endTime=" + '1421301600');
+      console.log(data);
+      if (typeof callback !== 'undefined')
+        callback();
+    }, "&stackId=" + stackId + "&startTime=" + startTime + "&endTime=" + endTime);
   };
-
   this.getResultsFromStackFilter = function () {
     service.rest('resultsFromStackFilter', function (data) {
       service.avaliableStacks = [];

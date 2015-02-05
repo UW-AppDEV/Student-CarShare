@@ -69,7 +69,6 @@ app.controller('ReservationCtrl', function ($scope, $state, $ionicSlideBoxDelega
 });
 
 
-
 app.controller('ReservationNewCtrl', function ($scope, $service, $state) {
   $scope.service = $service;
   $scope.navigate = function (page) {
@@ -101,6 +100,10 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
 });
 
 app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlideBoxDelegate, $service) {
+  //Init
+  $scope.estimatedCost = "$0.00";
+  $scope.stackId = $stateParams.id;
+  $scope.stack = $service.getStack($scope.stackId);
   $scope.timetable = $service.makeTimetable(1,24);
   for (i=0;i<$scope.timetable.length;i++){
     for (i2=0;i2<$scope.timetable[0].length;i2++){
@@ -117,9 +120,19 @@ app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlid
       $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("}");
     }
   }
-
-  $scope.stackId = $stateParams.id;
-  $scope.stack = $service.getStack($scope.stackId);
+  //Select Time etc
+  $scope.check = function (index, row, col){
+    if ($scope.timetable[row][col].state==1)
+      $scope.timetable[row][col].state = 2;
+    else if ($scope.timetable[row][col].state==2)
+      $scope.timetable[row][col].state = 1;
+    $scope.estimateCost();
+  }
+  //$scope.get
+  $scope.estimateCost = function (){
+    //var startTime = $service.arrayToUnix(1);
+    $service.getTripEstimate($scope.stack.stackId,30000,60000,function(){alert("lol");})
+  };
 });
 
 app.controller('ReservationSearchCtrl', function ($scope, $service) {
