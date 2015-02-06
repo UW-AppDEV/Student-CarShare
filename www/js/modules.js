@@ -31,12 +31,19 @@ app.factory('web', function ($q, $http, $templateCache) {
 });
 
 //DateTime
-app.factory('dateTime', function () {
+app.factory('$dateTime', function () {
   return {
     //Converts array[48] slot to unix time
     arrayToUnix: function (time) {
       var day = Math.floor(new Date().valueOf()/1000) - Math.floor(new Date().valueOf()/1000)%86400;
       return day+time*1800;
+    },
+    unixToArray: function (UNIX_timestamp) {
+      var a = new Date(UNIX_timestamp * 1000);
+      var date = a.getDate();
+      var hour = a.getHours();
+      var min = a.getMinutes();
+      return ((Math.floor(hour*2+min/30)-2)%48+48)%48;
     },
     //Rounds time to 30 minute intervals
     roundTime: function (time){

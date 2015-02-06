@@ -24,10 +24,10 @@
         </div>
         <div class="item item-text-wrap" style="margin:0px; padding:0px">
           <div ng-repeat="row in timetable" class="row">
-            <div ng-click="check(col.index, col.row, col.col)" ng-repeat="col in row" ng-style="{{col.style}}" class="col" style="border-top-style: solid; border-left-style: solid; border-width:1px;  text-align: center;">
-              <i ng-show="col.state==0" class="icon ion-close-round icon-accessory"></i>
-              <p ng-show="col.state==1">{{col.time}}</p>
-              <i ng-show="col.state==2" class="icon ion-checkmark-round icon-accessory"></i>
+            <div ng-click="check(col.index, col.row, col.col)" ng-repeat="col in row" ng-style="{{col.style}}" class="col" style="position:relative; height:30px; border-top-style: solid; border-left-style: solid; border-width:1px;  text-align: center;">
+              <i ng-show="col.state==0" class="icon ion-close-round icon-accessory" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;"></i>
+              <p ng-show="col.state==1" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;">{{col.time}}</p>
+              <i ng-show="col.state==2" class="icon ion-checkmark-round icon-accessory" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;"></i>
             </div>
           </div>
           <div class="row">
@@ -40,10 +40,26 @@
           </div>
         </div>
       </div>
-      <p>Estimated Cost: {{estimatedCost}}</p>
-      <p>
-        {{stack.stackId}}
-      </p>
+      <div class="card padding" style="margin:0px">
+        <p>Estimated Cost: {{estimatedCost}}</p>
+        <p>Stack ID: {{stack.stackId}} DEBUG USE ONLY</p>
+        <p>Vehicle: {{stack.DBEntityStack.resourceDescription}}</p>
+        <p>Location: {{stack.DBEntityStack.lotDescription}}</p>
+        <!--<div style="position:relative">
+          <p style="position:absolute; right:0px; bottom:0px">Vehicle: {{stack.DBEntityStack.resourceDescription}}</p>
+          REAL IMAGE ADDRESS<img class="full-image" src="{{stack.DBEntityStack.DBEntityVehicleType.imageDest}}">
+          <img class="full-image" src="http://reserve.studentcarshare.ca//images/client_images/vehicle_type_1377702493.jpg">
+        </div>-->
+        <div class="row">
+            <div class="col">Dogfree</div>
+            <div class="col">Baby seat</div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+        </div>
+      </div>
+
     </div>
     <button class="button button-full button-positive">
       Full Width Block Button

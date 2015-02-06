@@ -5,7 +5,7 @@
   <ion-content>
     <ion-item class="item-icon-right" ng-repeat="item in service.avaliableStacks" type="item-text-wrap" href="#/tab/reservations/book/{{item.stackId}}">
       {{item.DBEntityStack.descr}}
-      <input type="text" id="{{'slider'+item.stackId}}" name="example_name" value="" style="margin:0px; margin:auto" />
+      <input type="text" id="{{'slider'+item.stackId}}" style="margin:0px; margin:auto" />
       <i class="icon ion-chevron-right icon-accessory"></i>
     </ion-item>
   </ion-content>

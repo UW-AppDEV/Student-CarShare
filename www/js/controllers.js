@@ -69,7 +69,7 @@ app.controller('ReservationCtrl', function ($scope, $state, $ionicSlideBoxDelega
 });
 
 
-app.controller('ReservationNewCtrl', function ($scope, $service, $state) {
+app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTime) {
   $scope.service = $service;
   $scope.navigate = function (page) {
     $state.go(page);
@@ -77,10 +77,15 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state) {
 
   $service.rest('getDriverName', function (data) {
     for (var i=0; i<$service.avaliableStacks.length; i++){
+      var start = $dateTime.unixToArray($service.avaliableStacks[i].bestStartStamp);
+      var end = $dateTime.unixToArray($service.avaliableStacks[i].bestEndStamp);
+      if (start>end){
+        end = 48;
+      }
       $("#slider"+$service.avaliableStacks[i].stackId).ionRangeSlider({
         type: "double",
-        from: 1,
-        to: 2,
+        from: start,
+        to: end,
         values: ["6:00AM", "6:30AM", "7:00AM", "7:30AM", "8:00AM", "8:30AM", "9:00AM", "9:30AM", "10:00AM", "10:30AM", "11:00AM", "11:30AM", "12:00", "12:30", "1:00PM", "1:30PM", "2:00PM", "2:30PM", "3:00PM", "3:30PM", "4:00PM", "4:30PM", "5:00PM", "5:30PM", "6:00PM", "6:30PM", "7:00PM", "7:30PM", "8:00PM", "8:30PM", "9:00PM", "9:30PM", "10:00PM", "10:30PM", "11:00PM", "11:30PM", "12:00", "12:30", "1:00AM", "1:30AM", "2:00AM", "2:30AM", "3:00AM", "3:30AM", "4:00AM", "4:30AM", "5:00AM", "5:30AM", "6:00AM"],
         prefix: "",
         postfix: "",
@@ -99,7 +104,7 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
   $scope.reservation = $service.getReservation($scope.reservationId);
 });
 
-app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams", "$service","dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $service, dateTime, $timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
+app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $service, $dateTime, $timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
   //Init
   $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
@@ -116,8 +121,8 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams", "$
   $scope.estimateCost = function (){
     $scope.timetable = $timetable.startEnd($scope.timetable);
     if ($timetable.continuous($scope.timetable)){
-      $service.getTripEstimate($scope.stack.stackId,dateTime.arrayToUnix($scope.timetable.start),
-                             dateTime.arrayToUnix($scope.timetable.end),
+      $service.getTripEstimate($scope.stack.stackId,$dateTime.arrayToUnix($scope.timetable.start),
+                               $dateTime.arrayToUnix($scope.timetable.end),
                                function(data){if ($timetable.continuous($scope.timetable)){$scope.estimatedCost = data[0];}});
     }
     else{

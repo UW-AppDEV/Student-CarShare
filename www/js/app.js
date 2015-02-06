@@ -1,6 +1,6 @@
 var app = angular.module('app', ['ionic', 'uiGmapgoogle-maps']);
 
-app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', 'dateTime', function ($window, $rootScope, $q, $localstorage, web, dateTime) {
+app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', '$dateTime', function ($window, $rootScope, $q, $localstorage, web, $dateTime) {
   //INITIALIZE VARIABLES
   var service = this;
   //STAGING ACCOUNT
@@ -12,8 +12,8 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
 
   //========================DATE AND TIME FUNCTIONS========================
   this.searchSettings = function () {
-    service.searchSetting.start.time = dateTime.roundTime(Math.floor(Date.now() / 1000));
-    service.searchSetting.end.time = dateTime.roundTime(Math.floor(Date.now() / 1000 + 10800));
+    service.searchSetting.start.time = $dateTime.roundTime(Math.floor(Date.now() / 1000));
+    service.searchSetting.end.time = $dateTime.roundTime(Math.floor(Date.now() / 1000 + 10800));
     service.searchSetting.start.year = service.searchSetting.start.time.getYear();
     service.searchSetting.start.month = service.searchSetting.start.time.getMonth();
     service.searchSetting.start.date = service.searchSetting.start.time.getDate();
@@ -128,8 +128,8 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       }
 
       console.log(service.avaliableStacks);
-    }, "&aStackFilter[startTime]=" + dateTime.roundTime(Math.floor(Date.now() / 1000)) +
-                 "&aStackFilter[endTime]=" + dateTime.roundTime(Math.floor(Date.now() / 1000 + 1800))
+    }, "&aStackFilter[startTime]=" + $dateTime.roundTime(Math.floor(Date.now() / 1000)) +
+                 "&aStackFilter[endTime]=" + $dateTime.roundTime(Math.floor(Date.now() / 1000 + 1800))
                  + "&aStackFilter[latitude]=" + "43.467121" + "&aStackFilter[longitude]=" + "-80.546756" + "&includeStack=" + 'true');
   };
   this.getDriversIntrestingThings = function () {
