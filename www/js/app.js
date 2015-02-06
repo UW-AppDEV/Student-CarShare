@@ -169,9 +169,8 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   };
   this.getTripEstimate = function (stackId, startTime, endTime, callback) {
     service.rest('tripEstimate', function (data) {
-      console.log(data);
       if (typeof callback !== 'undefined')
-        callback();
+        callback(data);
     }, "&stackId=" + stackId + "&startTime=" + startTime + "&endTime=" + endTime);
   };
   this.getResultsFromStackFilter = function () {

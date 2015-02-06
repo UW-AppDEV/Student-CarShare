@@ -101,7 +101,7 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
 
 app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlideBoxDelegate, $service) {
   //Init
-  $scope.estimatedCost = "$0.00";
+  $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
   $scope.stack = $service.getStack($scope.stackId);
   $scope.timetable = $service.makeTimetable(1,24);
@@ -127,11 +127,43 @@ app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlid
     else if ($scope.timetable[row][col].state==2)
       $scope.timetable[row][col].state = 1;
     $scope.estimateCost();
-  }
-  //$scope.get
+  };
+  $scope.getStartEnd = function (){
+    $scope.timetable.start = 23;
+    $scope.timetable.end = 0;
+    for (i=0; i<$scope.timetable.length; i++){
+      for (i2=0; i2<$scope.timetable[0].length; i2++){
+        if ($scope.timetable[i][i2].state == 2){
+          if ($scope.timetable[i][i2].index<$scope.timetable.start)
+            $scope.timetable.start = $scope.timetable[i][i2].index;
+          if ($scope.timetable[i][i2].index>$scope.timetable.end)
+            $scope.timetable.end = $scope.timetable[i][i2].index;
+        }
+      }
+    }
+  };
+  $scope.continuous = function (){
+    for (i=0; i<$scope.timetable.length; i++){
+      for (i2=0; i2<$scope.timetable[0].length; i2++){
+        if ($scope.timetable[i][i2].state == 1 &&
+            ($scope.timetable[i][i2].index>$scope.timetable.start && $scope.timetable[i][i2].index<$scope.timetable.end)){
+          return false;
+        }
+      }
+    }
+    return true;
+  };
   $scope.estimateCost = function (){
-    //var startTime = $service.arrayToUnix(1);
-    $service.getTripEstimate($scope.stack.stackId,30000,60000,function(){alert("lol");})
+    $scope.getStartEnd();
+    var test = $scope.continuous();
+    if (test){
+      $service.getTripEstimate($scope.stack.stackId,$service.arrayToUnix($scope.timetable.start),
+                             $service.arrayToUnix($scope.timetable.end),
+                               function(data){$scope.estimatedCost = data[0];});
+    }
+    else{
+      $scope.estimatedCost = "N/A";
+    }
   };
 });
 
