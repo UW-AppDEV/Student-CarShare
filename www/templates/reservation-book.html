@@ -1,6 +1,22 @@
 <ion-view view-title="{{what.name}}">
   <ion-content>
-    <div style="width:100%; height:100px; background-color:yellow"></div>
+    <div class="map-container" style="height:120px; width:100%">
+      <ui-gmap-google-map id="map"
+                          center="map.center"
+                          pan="map.pan"
+                          zoom="map.zoom"
+                          draggable="false"
+                          options="map.options">
+        <ui-gmap-markers models="markers"
+                         idKey="'idKey'"
+                         coords="'self'"
+                         options="'options'"
+                         click="'onClick'">
+          <ui-gmap-windows show="'show'" options="'windowOptions'" closeClick="'onWindowClose'" ng-cloak>
+          </ui-gmap-windows>
+        </ui-gmap-markers>
+      </ui-gmap-google-map>
+    </div>
     <div class="padding">
       <div class="card" style="margin:0px">
         <div class="item item-divider">

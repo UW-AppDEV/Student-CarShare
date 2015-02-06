@@ -99,27 +99,12 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
   $scope.reservation = $service.getReservation($scope.reservationId);
 });
 
-app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlideBoxDelegate, $service) {
+app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams", "$service","dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $service, dateTime, $timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
   //Init
   $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
   $scope.stack = $service.getStack($scope.stackId);
-  $scope.timetable = $service.makeTimetable(1,24);
-  for (i=0;i<$scope.timetable.length;i++){
-    for (i2=0;i2<$scope.timetable[0].length;i2++){
-      $scope.timetable[i][i2].row = i;
-      $scope.timetable[i][i2].col = i2;
-      if ($scope.timetable[i][i2].ampm=="AM")
-        $scope.timetable[i][i2].style="{'background-color':'#6DCCE0',";
-      else if ($scope.timetable[i][i2].ampm=="PM")
-        $scope.timetable[i][i2].style="{'background-color':'#86C335',";
-      if ($scope.timetable[i][i2].row==0)
-        $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("'border-top-style':'none',");
-      if ($scope.timetable[i][i2].col==0)
-        $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("'border-left-style':'none',");
-      $scope.timetable[i][i2].style = $scope.timetable[i][i2].style.concat("}");
-    }
-  }
+  $scope.timetable = $timetable.applyStyle($service.makeTimetable(1,24));
   //Select Time etc
   $scope.check = function (index, row, col){
     if ($scope.timetable[row][col].state==1)
@@ -128,44 +113,96 @@ app.controller('ReservationBookCtrl', function ($scope, $stateParams, $ionicSlid
       $scope.timetable[row][col].state = 1;
     $scope.estimateCost();
   };
-  $scope.getStartEnd = function (){
-    $scope.timetable.start = 23;
-    $scope.timetable.end = 0;
-    for (i=0; i<$scope.timetable.length; i++){
-      for (i2=0; i2<$scope.timetable[0].length; i2++){
-        if ($scope.timetable[i][i2].state == 2){
-          if ($scope.timetable[i][i2].index<$scope.timetable.start)
-            $scope.timetable.start = $scope.timetable[i][i2].index;
-          if ($scope.timetable[i][i2].index>$scope.timetable.end)
-            $scope.timetable.end = $scope.timetable[i][i2].index;
-        }
-      }
-    }
-  };
-  $scope.continuous = function (){
-    for (i=0; i<$scope.timetable.length; i++){
-      for (i2=0; i2<$scope.timetable[0].length; i2++){
-        if ($scope.timetable[i][i2].state == 1 &&
-            ($scope.timetable[i][i2].index>$scope.timetable.start && $scope.timetable[i][i2].index<$scope.timetable.end)){
-          return false;
-        }
-      }
-    }
-    return true;
-  };
   $scope.estimateCost = function (){
-    $scope.getStartEnd();
-    var test = $scope.continuous();
-    if (test){
-      $service.getTripEstimate($scope.stack.stackId,$service.arrayToUnix($scope.timetable.start),
-                             $service.arrayToUnix($scope.timetable.end),
-                               function(data){$scope.estimatedCost = data[0];});
+    $scope.timetable = $timetable.startEnd($scope.timetable);
+    if ($timetable.continuous($scope.timetable)){
+      $service.getTripEstimate($scope.stack.stackId,dateTime.arrayToUnix($scope.timetable.start),
+                             dateTime.arrayToUnix($scope.timetable.end),
+                               function(data){if ($timetable.continuous($scope.timetable)){$scope.estimatedCost = data[0];}});
     }
     else{
       $scope.estimatedCost = "N/A";
     }
   };
-});
+
+  GoogleMapApi.then(function (maps) { //maps is an instance of google map
+    $scope.locations = Locations;
+    $scope.map = {
+      center: {
+        latitude: 42.307827,
+        longitude: -83.067037
+      },
+      control: {},
+      pan: true,
+      zoom: 14,
+      refresh: false,
+      events: {},
+      bounds: {},
+      polys: [],
+      draw: undefined
+    };
+    $scope.markers = Locations;
+  });
+  //This is for getting user's location in Cordova
+  $scope.myLocation = "";
+  $scope.getMyLocation = function () {
+    function onError(error) {
+      console.log('code: ' + error.code + '\n' +
+                  'message: ' + error.message + '\n');
+    }
+
+    function onSuccess(position) {
+      $scope.myLocation = "Lat: " + position.coords.latitude.toString() + "lng:" + position.coords.longitude.toString();
+    }
+
+    var options = { enableHighAccuracy: true };
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+  };
+  //=====================jerry's code=======================
+  var clear = function () {
+    $scope.map.polys = [];
+  };
+  var draw = function () {
+    $scope.map.draw();//should be defined by now
+  };
+  $scope.testRefresh = function () {
+    console.log($scope.map.control.refresh);
+    $scope.map.control.refresh({latitude: 32.779680, longitude: -79.935493});
+  };
+  //add beginDraw as a subscriber to be invoked by the channel, allows controller to controller coms
+  drawChannel.add(draw);
+  clearChannel.add(clear);
+  //========================================Khashayar's Map======================================================
+  /*
+     Google Maps methods and manipulation
+     */
+  //Initializing the addressArray
+  var addressArray;
+  $scope.GoogleMapsSrc = '';
+  $scope.address = '';
+  $scope.updateAddress = function (addressText) {
+    //TODO check $http, might be native in angular
+    //TODO check search in AngularGoogleMap
+    $http.get('http://maps.googleapis.com/maps/api/geocode/json?address=' + addressText + '&sensor=false')
+    // After getting the results
+    .then(function (results) {
+      console.log(results.toString);
+      // If the call was successful
+      if (results.data.status === "OK") {
+        // setting the addressArray to the results of the call.
+        addressArray = results.data;
+        // Url to be used in google maps iframe src.
+        $scope.GoogleMapsSrc = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyCuD7GXWfGRg-tbFBjno02hjPODQVtWbpI&q=' + addressText;
+      }
+    });
+  };
+  // helper function for trusting a url to be used withing an iframe.
+  $scope.trustSrc = function (src) {
+    console.log($sce.trustAsResourceUrl(src));
+    return $sce.trustAsResourceUrl(src);
+  };
+
+}]);
 
 app.controller('ReservationSearchCtrl', function ($scope, $service) {
   $scope.service = $service;

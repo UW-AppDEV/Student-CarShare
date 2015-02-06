@@ -1,38 +1,6 @@
 var app = angular.module('app', ['ionic', 'uiGmapgoogle-maps']);
 
-//Local Storage
-app.factory('$localstorage', ['$window', function ($window) {
-  return {
-    set: function (key, value) {
-      $window.localStorage[key] = value;
-    },
-    get: function (key, defaultValue) {
-      return $window.localStorage[key] || defaultValue;
-    },
-    setObject: function (key, value) {
-      $window.localStorage[key] = JSON.stringify(value);
-    },
-    getObject: function (key, defaultValue) {
-      return JSON.parse($window.localStorage[key] || JSON.stringify(defaultValue));
-    }
-  }
-}]);
-
-//Web Requests
-app.factory('web', function ($q, $http, $templateCache) {
-  return {
-    get: function (query) {
-      var deferred = $q.defer();
-      $http.get(query)
-      .success(function (data) {
-        deferred.resolve(data);
-      });
-      return deferred.promise;
-    }
-  };
-});
-
-app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', function ($window, $rootScope, $q, $localstorage, web) {
+app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', 'dateTime', function ($window, $rootScope, $q, $localstorage, web, dateTime) {
   //INITIALIZE VARIABLES
   var service = this;
   //STAGING ACCOUNT
@@ -43,30 +11,9 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   //this.pw = '';
 
   //========================DATE AND TIME FUNCTIONS========================
-  //Converts array time to unix time
-  this.arrayToUnix = function (time){
-    var day = Math.floor(new Date().valueOf()/1000) - Math.floor(new Date().valueOf()/1000)%86400;
-    return day+time*1800;
-  }
-  //Rounds time to 30 minute intervals
-  this.roundTime = function (time) {
-    return time - (time % 1800);
-  };
-  this.convertDate = function (UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time = month + ' ' + date + ', ' + year + ' ' + hour + ':' + min + ':' + sec;
-    return time;
-  };
   this.searchSettings = function () {
-    service.searchSetting.start.time = service.roundTime(Math.floor(Date.now() / 1000));
-    service.searchSetting.end.time = service.roundTime(Math.floor(Date.now() / 1000 + 10800));
+    service.searchSetting.start.time = dateTime.roundTime(Math.floor(Date.now() / 1000));
+    service.searchSetting.end.time = dateTime.roundTime(Math.floor(Date.now() / 1000 + 10800));
     service.searchSetting.start.year = service.searchSetting.start.time.getYear();
     service.searchSetting.start.month = service.searchSetting.start.time.getMonth();
     service.searchSetting.start.date = service.searchSetting.start.time.getDate();
@@ -78,9 +25,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     service.searchSetting.end.hour = service.searchSetting.end.time.getHours();
     service.searchSetting.end.min = service.searchSetting.end.time.getMinutes();
   }
-  this.convertUnixTime = function (year, month, day, hour, min) {
-    return (new Date(year + "/" + month + "/" + day + " " + hour + ":" + min + ":00").getTime() / 1000);
-  }
+
 
   //=========================SCOPE INTERFACING FUNCTIONS===================
   this.getReservation = function (id) {
@@ -183,8 +128,8 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       }
 
       console.log(service.avaliableStacks);
-    }, "&aStackFilter[startTime]=" + service.roundTime(Math.floor(Date.now() / 1000)) +
-                 "&aStackFilter[endTime]=" + service.roundTime(Math.floor(Date.now() / 1000 + 1800))
+    }, "&aStackFilter[startTime]=" + dateTime.roundTime(Math.floor(Date.now() / 1000)) +
+                 "&aStackFilter[endTime]=" + dateTime.roundTime(Math.floor(Date.now() / 1000 + 1800))
                  + "&aStackFilter[latitude]=" + "43.467121" + "&aStackFilter[longitude]=" + "-80.546756" + "&includeStack=" + 'true');
   };
   this.getDriversIntrestingThings = function () {
