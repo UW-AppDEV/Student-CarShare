@@ -74,7 +74,10 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTi
   $scope.navigate = function (page) {
     $state.go(page);
   };
-
+  $scope.go = function (stackId) {
+    $state.go("tab.reservation-book", {id:stackId});
+  };
+  $scope.timeline = timelineTemplate;
   $service.rest('getDriverName', function (data) {
     for (var i=0; i<$service.avaliableStacks.length; i++){
       var start = $dateTime.unixToArray($service.avaliableStacks[i].bestStartStamp);

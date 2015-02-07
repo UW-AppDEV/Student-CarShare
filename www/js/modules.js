@@ -97,16 +97,22 @@ app.factory('$timetable', function () {
       return timetable;
     },
     applyStyle: function (timetable){
+      var ampmRecord = "";
       for (i=0;i<timetable.length;i++){
+        if (ampmRecord != timetable[i][0].ampm){
+          timetable[i].tmDisp = timetable[i][0].ampm;
+          ampmRecord = timetable[i][0].ampm;
+        }
+        else{
+          timetable[i].tmDisp = "";
+        }
         for (i2=0;i2<timetable[0].length;i2++){
           timetable[i][i2].row = i;
           timetable[i][i2].col = i2;
           if (timetable[i][i2].ampm=="AM")
-            timetable[i][i2].style="{'background-color':'#6DCCE0',";
+            timetable[i][i2].style="{'color':'#6DCCE0',";
           else if (timetable[i][i2].ampm=="PM")
-            timetable[i][i2].style="{'background-color':'#86C335',";
-          if (timetable[i][i2].row==0)
-            timetable[i][i2].style = timetable[i][i2].style.concat("'border-top-style':'none',");
+            timetable[i][i2].style="{'color':'#86C335',";
           if (timetable[i][i2].col==0)
             timetable[i][i2].style = timetable[i][i2].style.concat("'border-left-style':'none',");
           timetable[i][i2].style = timetable[i][i2].style.concat("}");
