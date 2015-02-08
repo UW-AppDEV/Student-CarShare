@@ -2,7 +2,9 @@
   <ion-nav-buttons side="right">
     <button ng-click="navigate('tab.reservation-search')" class="button button-icon icon ion-ios7-search"></button>
   </ion-nav-buttons>
-  <ion-content>
+  <ion-content ng-class="{'' : scroll , 'no-scroll' : !scroll}">
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="loadData()"></ion-refresher>
+    <img src="assets/LOADING.png" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" />
     <div class="list card" ng-repeat="item in service.avaliableStacks" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
       <div class="item item-divider">{{item.DBEntityStack.resourceDescription}}</div>
       <div class="row" style="margin:0px; padding:0px">
@@ -19,11 +21,11 @@
       </div>
     </div>
     <!--
-    <ion-item class="item-icon-right" ng-repeat="item in service.avaliableStacks" type="item-text-wrap" href="#/tab/reservations/book/{{item.stackId}}">
-      {{item.DBEntityStack.descr}}
-      <input type="text" id="{{'slider'+item.stackId}}" style="margin:0px; margin:auto" />
-      <i class="icon ion-chevron-right icon-accessory"></i>
-    </ion-item>-->
+<ion-item class="item-icon-right" ng-repeat="item in service.avaliableStacks" type="item-text-wrap" href="#/tab/reservations/book/{{item.stackId}}">
+{{item.DBEntityStack.descr}}
+<input type="text" id="{{'slider'+item.stackId}}" style="margin:0px; margin:auto" />
+<i class="icon ion-chevron-right icon-accessory"></i>
+</ion-item>-->
     <!--
 <div class="row">
 <div class="col" ng-repeat="key in timeline" style="position:relative;  border-top-style: solid; border-left-style: solid; border-color:#7D7D7D; border-width:1px; padding:0px;margin:0px">
