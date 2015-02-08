@@ -24,7 +24,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     service.searchSetting.end.date = service.searchSetting.end.time.getDate();
     service.searchSetting.end.hour = service.searchSetting.end.time.getHours();
     service.searchSetting.end.min = service.searchSetting.end.time.getMinutes();
-  }
+  };
 
 
   //=========================SCOPE INTERFACING FUNCTIONS===================
