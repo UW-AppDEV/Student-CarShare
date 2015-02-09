@@ -120,7 +120,13 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
   };
   this.getResultsFromStackFilter = function (callback) {
     service.rest('resultsFromStackFilter', function (data) {
-      service.avaliableStacks = data.DBRankedStacks;
+        if(data){
+            console.log(data);
+            service.avaliableStacks = data.DBRankedStacks;
+        }else{
+            console.log("calling resultsFromStackFilter: cannot get data from server");
+        }
+
       if (typeof callback !== 'undefined')
         callback(data);
     }, "&aStackFilter[startTime]=" + $dateTime.roundTime(Math.floor(Date.now() / 1000)) +

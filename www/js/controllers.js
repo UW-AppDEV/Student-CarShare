@@ -75,7 +75,9 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTi
     $state.go(page);
   };
   $scope.go = function (stackId) {
-    $state.go("tab.reservation-book", {id:stackId});
+    $state.go("tab.reservation-book", {
+        'id':stackId
+    });
   };
   $scope.loading = true;
   $scope.scroll = false;
@@ -93,8 +95,9 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTi
                           $scope.scroll = true;
                           $scope.loading = false; }, 10);
     }
-  }
+  };
   $scope.drawSliders = function (){
+      console.log($service.avaliableStacks);
     for (var i=0; i<$service.avaliableStacks.length; i++){
       //this will be an array of values from the nearest hour now (round down) to 24 hours later
       // in increments of 30min
@@ -107,10 +110,10 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTi
       for(var j=0;j<48;j++){
         var temp = now.add(j*30,'m');
         timeslots.push(temp.format('hh:mm A'));
-        if(startIndex === null && temp.isAfter(bestStartStamp)){
+        if(startIndex === null && (temp.isAfter(bestStartStamp) || temp.isSame(bestStartStamp))){
           startIndex=j==0?0:j-1;
         }
-        if(endIndex=== null && temp.isAfter(bestEndStamp)){
+        if(endIndex=== null && (temp.isAfter(bestEndStamp) || temp.isSame(bestEndStamp))){
           endIndex=j==0?0:j-1;
         }
       }
@@ -131,7 +134,7 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTi
     }
     //Cancel Refresh Loading
     $scope.$broadcast('scroll.refreshComplete');
-  }
+  };
   $scope.loadData();
 });
 
@@ -141,11 +144,14 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
   $scope.reservation = $service.getReservation($scope.reservationId);
 });
 
-app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $service, $dateTime, $timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
+app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$state", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $state,$scope, $stateParams, $service, $dateTime, $timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
   //Init
   $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
+
   $scope.stack = $service.getStack($scope.stackId);
+    console.log($scope.stack);
+    console.log($service.getStack);
   $scope.timetable = $timetable.applyStyle($service.makeTimetable(1,24));
   //Select Time etc
   $scope.check = function (index, row, col){
@@ -169,10 +175,12 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams", "$
 
   GoogleMapApi.then(function (maps) { //maps is an instance of google map
     $scope.locations = Locations;
+      var defaultlat=43.4711753;
+      var defaultlng = -80.5531673;
     $scope.map = {
       center: {
-        latitude: 42.307827,
-        longitude: -83.067037
+        latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude),
+        longitude:  defaultlng|| parseInt($scope.stack.DBEntityStack.longitude)
       },
       control: {},
       pan: true,
@@ -183,11 +191,30 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams", "$
       polys: [],
       draw: undefined,
       options:{
+          scrollwheel: false,
+          navigationControl: false,
+          mapTypeControl: false,
+          scaleControl: false,
         disableDefaultUI:true,
         draggable:false
       }
     };
-    $scope.markers = Locations;
+    //$scope.markers = Locations; Not using the list of carshare locations from service anymore,
+      //instead, markers are now generated from the stackInfo
+      $scope.markers=[{
+          'idKey':0,
+          latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude) ,
+          longitude: defaultlng || parseInt($scope.stack.DBEntityStack.longitude) ,
+          options:{
+              draggable: false
+          },
+          onClick:function(){
+              $state.go('tab.map-detail',{
+                  lat: $scope.stack.DBEntityStack.latitude,
+                  lng: $scope.stack.DBEntityStack.longitude
+              })
+          }
+      }];
   });
   //This is for getting user's location in Cordova
   $scope.myLocation = "";
@@ -265,13 +292,15 @@ app.controller('AccountCtrl', function ($scope, $state, $ionicSlideBoxDelegate, 
   $service.getClientPhone();
 });
 
-app.controller('MapCtrl', ['$rootScope', '$scope', "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
+app.controller('MapCtrl', ['$rootScope', '$scope', "uiGmapLogger", "$state","$stateParams",'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $log, $state,$stateParams,drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
   GoogleMapApi.then(function (maps) { //maps is an instance of google map
+    var defaultlat=43.4711753;
+      var defaultlng = -80.5531673;
     $scope.locations = Locations;
     $scope.map = {
       center: {
-        latitude: 42.307827,
-        longitude: -83.067037
+        latitude: $stateParams.lat || defaultlat,
+        longitude: $stateParams.lng ||defaultlng
       },
       control: {},
       pan: true,
