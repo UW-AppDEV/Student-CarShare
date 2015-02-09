@@ -144,7 +144,7 @@ app.controller('ReservationDetailCtrl', function ($scope, $stateParams, $service
   $scope.reservation = $service.getReservation($scope.reservationId);
 });
 
-app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$state", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $state,$scope, $stateParams, $service, $dateTime, $timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
+app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$state", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $state,$service, $dateTime, $timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
   //Init
   $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
