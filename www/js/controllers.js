@@ -152,7 +152,7 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
   $scope.stack = $service.getStack($scope.stackId);
     console.log($scope.stack);
     console.log($service.getStack);
-  $scope.timetable = $timetable.applyStyle($service.makeTimetable(1,24));
+  $scope.timetable = $timetable.applyStyle($timetable.makeTimetable(1,24));
   //Select Time etc
   $scope.check = function (index, row, col){
     if ($scope.timetable[row][col].state==1)

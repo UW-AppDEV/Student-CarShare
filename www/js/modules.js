@@ -71,6 +71,23 @@ app.factory('$dateTime', function () {
 //Timetable special functions
 app.factory('$timetable', function () {
   return {
+    makeTimetable: function (start,end){
+      //Mark Avaliable
+      var timetable = timetableTemplate;
+      var count = 0;
+      for (i=0; i<timetable.length; i++){
+        for (i2=0; i2<timetable[0].length;i2++){
+          timetable[i][i2].index=i*6+i2;
+          if (count>=start && count<=end)
+            timetable[i][i2].state = 1;
+          else
+            timetable[i][i2].state = 0;
+          count++;
+        }
+      }
+      //Remove empty rows and return
+      return timetable.slice(start/6, end/6+1);
+    },
     continuous: function (timetable) {
       for (i=0; i<timetable.length; i++){
         for (i2=0; i2<timetable[0].length; i2++){
