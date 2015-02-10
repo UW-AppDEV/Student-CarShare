@@ -175,8 +175,8 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
 
   GoogleMapApi.then(function (maps) { //maps is an instance of google map
     $scope.locations = Locations;
-      var defaultlat=43.4711753;
-      var defaultlng = -80.5531673;
+      var defaultlat= $scope.stack.DBEntityStack.latitude;
+      var defaultlng = $scope.stack.DBEntityStack.longitude;
     $scope.map = {
       center: {
         latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude),
