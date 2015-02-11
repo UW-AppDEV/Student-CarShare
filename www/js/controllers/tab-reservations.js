@@ -8,19 +8,20 @@ app.controller('ReservationCtrl', function ($scope, $state, $ionicSlideBoxDelega
   };
   $scope.go = function (stackId) {
     $state.go("tab.reservation-book", {
-        'id':stackId
+      'id':stackId
     });
   };
   $scope.loadData = function (forceRefresh){
-    if (typeof $service.avaliableStacks === 'undefined' || forceRefresh){
-      $service.getResultsFromStackFilter(function () {});
-    }
-    else {
 
-    }
   };
-  $scope.loaded = function (){
-    return !(typeof $service.avaliableStacks === 'undefined');
+  $scope.loadedPast = function (){
+    return !(typeof $scope.pastReservations === 'undefined');
+  };
+  $scope.loadedFuture = function (){
+    return !(typeof $scope.futureReservations === 'undefined');
+  };
+  $scope.loadedCurrent = function (){
+    return !(typeof $scope.currentReservation === 'undefined');
   };
   $scope.loadData();
 });

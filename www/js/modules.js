@@ -26,7 +26,29 @@ app.factory('$web', function ($q, $http, $templateCache) {
         deferred.resolve(data);
       });
       return deferred.promise;
-    }
+    },
+    rest: function (method, callback, param, user, pw) {
+      //SERVER ADDRESS
+      //MUST MOVE TO HTTPS MODE ONCE RELEASED TO PUBLIC
+      //var adr = 'http://jerryzhou.net/cors.php?https://reserve.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
+      var adr = 'http://jerryzhou.net/cors.php?http://staging.studentcarshare.ca/webservices/index.php/WSUser/WSRest?';
+      //OPTIONAL PARAMETERS
+      if (typeof param === 'undefined')
+        param = '';
+      if (typeof user === 'undefined')
+        user = '9738';
+      if (typeof pw === 'undefined')
+        pw = '1234';
+      //AUTHETICATION
+      time = Math.floor(Date.now() / 1000);
+      hash = sha1(sha1(pw) + time + method);
+      var deferred = $q.defer();
+      $http.get(adr + 'action=' + method + param + '&user=' + user + '&hash=' + hash + "&time=" + time + '&billcode=mobile')
+      .success(function (data) {
+        deferred.resolve(data);
+      });
+      return deferred.promise;
+    },
   };
 });
 
@@ -139,6 +161,28 @@ app.factory('$timetable', function () {
     },
   };
 });
+
+app.factory('channel', function () {
+  return function () {
+    var callbacks = [];
+    this.add = function (cb) {
+      callbacks.push(cb);
+    };
+    this.invoke = function () {
+      callbacks.forEach(function (cb) {
+        cb();
+      });
+    };
+    return this;
+  };
+});
+app.service('drawChannel', ['channel', function (channel) {
+  return new channel()
+}]);
+app.service('clearChannel', ['channel', function (channel) {
+  return new channel()
+}]);
+
 
 app.factory('Locations', function () {
   //LOCATIONS

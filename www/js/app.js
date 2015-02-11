@@ -1,6 +1,4 @@
 var app = angular.module('app', ['ionic', 'uiGmapgoogle-maps']);
-var user = '9738';
-var pw = '1234';
 
 app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$web', '$dateTime', function ($window, $rootScope, $q, $localstorage, $web, $dateTime) {
   //INITIALIZE VARIABLES
@@ -78,8 +76,6 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$we
       else {
         callback(data);
       }
-    }, function (reason) {
-      console.log('Failed: ' + reason);
     });
   };
   //========================CARSHARE API USE==============================
@@ -132,55 +128,29 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$we
       service.messages = data.WSDriversIntrestingThings.driverMessages;
     });
   };
-  this.getFutureReservation = function () {
+  this.getFutureReservation = function (callback) {
     service.rest('futureReservations', function (data) {
-      console.log(data)
+      console.log(data);
+      service.futureReservation = data;
+      if (typeof callback !== 'undefined')
+        callback(data);
     });
   };
-  this.getCurrentReservation = function () {
+  this.getCurrentReservation = function (callback) {
     service.rest('currentReservation', function (data) {
       console.log(data);
+      service.currentReservation = data;
+      if (typeof callback !== 'undefined')
+        callback(data);
     });
   };
-  this.getPastReservation = function () {
+  this.getPastReservation = function (callback) {
     service.rest('pastReservations', function (data) {
       console.log(data);
-      service.pastReservation = [];
-      //If object is EMPTY
-      if (Object.getOwnPropertyNames(data).length === 0) {
-      }
-      //If object is 1 item (not array)
-      else if (data.length === undefined) {
-        service.pastReservation.push(data.DBEntityReservation);
-        service.pastReservation[0].startDate = service.convertDate(service.pastReservation[0].startStamp);
-      }
-      //if array
-      else {
-        for (var i = 0; i < data.length; i++) {
-          service.pastReservation.push(data.DBEntityReservation[i]);
-        }
-      }
+      service.pastReservation = data;
+      if (typeof callback !== 'undefined')
+        callback(data);
     });
   };
   //============================CALLING API UPON APP START (use for testing)==========
-}]);
-app.factory('channel', function () {
-  return function () {
-    var callbacks = [];
-    this.add = function (cb) {
-      callbacks.push(cb);
-    };
-    this.invoke = function () {
-      callbacks.forEach(function (cb) {
-        cb();
-      });
-    };
-    return this;
-  };
-});
-app.service('drawChannel', ['channel', function (channel) {
-  return new channel()
-}]);
-app.service('clearChannel', ['channel', function (channel) {
-  return new channel()
 }]);

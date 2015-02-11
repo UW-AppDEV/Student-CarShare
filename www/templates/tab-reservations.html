@@ -1,44 +1,53 @@
-<ion-view view-title="Reservations">
+<ion-view view-title="My Reservations">
   <ion-nav-buttons side="right">
     <button class="button button-positive button-clear no-animation" ng-click="navigate('tab.reservation-new')">Add</button>
   </ion-nav-buttons>
   <ion-content ng-class="{'' : loaded() , 'no-scroll' : !loaded()}">
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="loadData(1)"></ion-refresher>
-    <img src="assets/LOADING.png" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" />
+    <img ng-show="!loaded()" src="assets/LOADING.png" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" />
     <div class="list">
-      <div class="item item-divider">
-        Current
+      <div ng-show="loadedCurrent()" class="item item-divider">
+        Currently Active
       </div>
-      <a class="item" ng-show="loaded()">
-        Item
-      </a>
-      <div class="item item-divider">
-        Future
-      </div>
-      <div class="item item-divider">
-        Past Month
-      </div>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="item in service.pastReservation" type="item-text-wrap" href="#/tab/reservations/{{item.id}}">
-        <div class="item item-avatar">
-          <img ng-src="{{item.DBEntityStack.DBEntityVehicleType.imageDest}}">
-          <h2>Marty McFly</h2>
-          <p>November 05, 1955</p>
-        </div>
-        <div class="item item-body">
-          <p>
-            {{item.DBEntityStack.DBEntityVehicleType.descr}}
-            {{item.DBEntityStack.lotDescription}}
-            {{item.estimate}}
-            {{item.id}}
-            {{item.startDate}}
-          </p>
-          <p>
-            <a href="#" class="subdued">1 Like</a>
-            <a href="#" class="subdued">5 Comments</a>
-          </p>
-        </div>
-      </ion-item>
-    </div>
+      <div class="list card" ng-show="loadedCurrent()" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
+        <div class="row" style="margin:0px; padding:0px">
+          <div class="col col-25">
+            <img class="full-image" src="{{item.DBEntityStack.DBEntityVehicleType.thumbDest}}">
+          </div>
+          <div class="col col-67">
+            <p>lol</p>
 
+          </div>
+          <div class="col">
+            <i class="icon ion-chevron-right icon-accessory" style="float:right"></i>
+          </div>
+        </div>
+      </div>
+      <div ng-show="loadedFuture()" class="item item-divider">
+        Future Reservations
+      </div>
+      <div class="list card" ng-repeat="item in futureReservations" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
+        <div class="item item-divider">
+          {{item.DBEntityStack.resourceDescription}}
+          <p style="float:right">{{item.distancekm}} km away</p>
+        </div>
+        <div class="row" style="margin:0px; padding:0px">
+          <div class="col col-25">
+            <img class="full-image" src="{{item.DBEntityStack.DBEntityVehicleType.thumbDest}}">
+          </div>
+          <div class="col col-67">
+            <p>lol</p>
+            <input type="text" id="{{'slider'+item.stackId}}" />
+          </div>
+          <div class="col">
+            <i class="icon ion-chevron-right icon-accessory" style="float:right"></i>
+          </div>
+        </div>
+      </div>
+      <div ng-show="loadedPast()" class="item item-divider">
+        Past Reservations
+      </div>
+
+    </div>
   </ion-content>
 </ion-view>
