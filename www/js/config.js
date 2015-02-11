@@ -32,24 +32,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     url: "/tab",
     templateUrl: "templates/tabs.html"
   })
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'MainCtrl'
-      }
-    }
-  })
-  .state('tab.dash-detail', {
-    url: '/dash/detail',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/dash-detail.html',
-        controller: ''
-      }
-    }
-  })
   .state('tab.map', {
     url: '/map',
     views: {
@@ -59,7 +41,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
       }
     }
   })
-      .state('tab.map-detail', {
+  .state('tab.map-detail', {
     url: '/map/:lat/:lng',
     views: {
       'tab-map': {
@@ -142,13 +124,13 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   });
   $urlRouterProvider.otherwise("/tab");
 })
-    .config(function(uiGmapGoogleMapApiProvider) {
-        uiGmapGoogleMapApiProvider.configure({
-            key: 'AIzaSyCuD7GXWfGRg-tbFBjno02hjPODQVtWbpI',
-            v: '3.17',
-            libraries: 'weather,geometry,visualization'
-        });
-    });
+.config(function(uiGmapGoogleMapApiProvider) {
+  uiGmapGoogleMapApiProvider.configure({
+    key: 'AIzaSyCuD7GXWfGRg-tbFBjno02hjPODQVtWbpI',
+    v: '3.17',
+    libraries: 'weather,geometry,visualization'
+  });
+});
 
 const timetableTemplate = [[{time:"6:00", ampm:"AM"}, {"time":"6:30", "ampm":"AM"},
                             {time:"7:00", "ampm":"AM"}, {"time":"7:30", "ampm":"AM"},
