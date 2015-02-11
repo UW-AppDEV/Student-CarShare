@@ -17,7 +17,7 @@ app.factory('$localstorage', ['$window', function ($window) {
 }]);
 
 //Web Requests
-app.factory('web', function ($q, $http, $templateCache) {
+app.factory('$web', function ($q, $http, $templateCache) {
   return {
     get: function (query) {
       var deferred = $q.defer();

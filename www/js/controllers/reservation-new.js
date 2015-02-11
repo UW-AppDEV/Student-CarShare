@@ -8,25 +8,16 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTi
         'id':stackId
     });
   };
-  $scope.loading = true;
-  $scope.scroll = false;
-  $scope.loadData = function (){
-    if (typeof $service.avaliableStacks === 'undefined'){
+  $scope.loadData = function (forceRefresh){
+    if (typeof $service.avaliableStacks === 'undefined' || forceRefresh){
       $service.getResultsFromStackFilter(function () {
-        $timeout(function(){$scope.drawSliders();
-                            //Cancel Loading
-                            $scope.scroll = true;
-                            $scope.loading = false; }, 10);});
+        $timeout(function(){$scope.drawSliders();}, 10);});
     }
     else {
-      $timeout(function(){$scope.drawSliders();
-                          //Cancel Loading
-                          $scope.scroll = true;
-                          $scope.loading = false; }, 10);
+      $timeout(function(){$scope.drawSliders();}, 10);
     }
   };
   $scope.drawSliders = function (){
-      console.log($service.avaliableStacks);
     for (var i=0; i<$service.avaliableStacks.length; i++){
       //this will be an array of values from the nearest hour now (round down) to 24 hours later
       // in increments of 30min
@@ -63,6 +54,9 @@ app.controller('ReservationNewCtrl', function ($scope, $service, $state, $dateTi
     }
     //Cancel Refresh Loading
     $scope.$broadcast('scroll.refreshComplete');
+  };
+  $scope.loaded = function (){
+    return !(typeof $service.avaliableStacks === 'undefined');
   };
   $scope.loadData();
 });

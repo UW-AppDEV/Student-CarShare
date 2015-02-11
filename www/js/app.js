@@ -1,6 +1,8 @@
 var app = angular.module('app', ['ionic', 'uiGmapgoogle-maps']);
+var user = '9738';
+var pw = '1234';
 
-app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web', '$dateTime', function ($window, $rootScope, $q, $localstorage, web, $dateTime) {
+app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$web', '$dateTime', function ($window, $rootScope, $q, $localstorage, $web, $dateTime) {
   //INITIALIZE VARIABLES
   var service = this;
   //STAGING ACCOUNT
@@ -65,7 +67,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
     //AUTHETICATION
     time = Math.floor(Date.now() / 1000);
     hash = sha1(sha1(pw) + time + method)
-    var promise = web.get(adr + 'action=' + method + param + '&user=' + user + '&hash=' + hash + "&time=" + time + '&billcode=mobile');
+    var promise = $web.get(adr + 'action=' + method + param + '&user=' + user + '&hash=' + hash + "&time=" + time + '&billcode=mobile');
     promise.then(function (data) {
       //CHECK FOR ERROR BEFORE CALLBACK
       if (data == null) {
@@ -160,7 +162,7 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', 'web
       }
     });
   };
-  //============================CALLING API UPON APP START==========
+  //============================CALLING API UPON APP START (use for testing)==========
 }]);
 app.factory('channel', function () {
   return function () {

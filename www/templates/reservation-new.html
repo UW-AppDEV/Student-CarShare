@@ -2,9 +2,9 @@
   <ion-nav-buttons side="right">
     <button ng-click="navigate('tab.reservation-search')" class="button button-icon icon ion-ios7-search"></button>
   </ion-nav-buttons>
-  <ion-content ng-class="{'' : scroll , 'no-scroll' : !scroll}">
-    <ion-refresher pulling-text="Pull to refresh..." on-refresh="loadData()"></ion-refresher>
-    <img src="assets/LOADING.png" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" />
+  <ion-content ng-class="{'' : loaded() , 'no-scroll' : !loaded()}">
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="loadData(1)"></ion-refresher>
+    <img ng-show="!loaded()" src="assets/LOADING.png" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" />
     <div class="list card" ng-repeat="item in service.avaliableStacks" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
       <div class="item item-divider">
         {{item.DBEntityStack.resourceDescription}}
