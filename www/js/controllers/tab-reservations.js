@@ -12,16 +12,21 @@ app.controller('ReservationCtrl', function ($scope, $state, $ionicSlideBoxDelega
     });
   };
   $scope.loadData = function (forceRefresh){
-
+    $service.getCurrentReservation(function (data) {$scope.$broadcast('scroll.refreshComplete');});
+    $service.getPastReservations(function (data) {$scope.$broadcast('scroll.refreshComplete');});
+    $service.getFutureReservations(function (data) {$scope.$broadcast('scroll.refreshComplete');});
   };
   $scope.loadedPast = function (){
-    return !(typeof $scope.pastReservations === 'undefined');
+    return !(typeof $service.pastReservations === 'undefined');
   };
   $scope.loadedFuture = function (){
-    return !(typeof $scope.futureReservations === 'undefined');
+    return !(typeof $service.futureReservations === 'undefined');
   };
   $scope.loadedCurrent = function (){
-    return !(typeof $scope.currentReservation === 'undefined');
+    return !(typeof $service.currentReservation === 'undefined');
+  };
+  $scope.loaded = function(){
+    return ($scope.loadedPast() || $scope.loadedFuture() || $scope.loadedCurrent());
   };
   $scope.loadData();
 });

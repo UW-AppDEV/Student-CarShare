@@ -9,14 +9,18 @@
       <div ng-show="loadedCurrent()" class="item item-divider">
         Currently Active
       </div>
-      <div class="list card" ng-show="loadedCurrent()" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
+      <div class="list card" ng-repeat="item in service.currentReservation" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
+        <div class="item item-divider">
+          {{item.DBEntityStack.resourceDescription}}
+        </div>
         <div class="row" style="margin:0px; padding:0px">
           <div class="col col-25">
             <img class="full-image" src="{{item.DBEntityStack.DBEntityVehicleType.thumbDest}}">
           </div>
           <div class="col col-67">
             <p>lol</p>
-
+            {{item.id}}
+            <input type="text" id="{{'slider'+item.stackId}}" />
           </div>
           <div class="col">
             <i class="icon ion-chevron-right icon-accessory" style="float:right"></i>
@@ -26,10 +30,9 @@
       <div ng-show="loadedFuture()" class="item item-divider">
         Future Reservations
       </div>
-      <div class="list card" ng-repeat="item in futureReservations" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
+      <div class="list card" ng-repeat="item in service.futureReservations" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
         <div class="item item-divider">
           {{item.DBEntityStack.resourceDescription}}
-          <p style="float:right">{{item.distancekm}} km away</p>
         </div>
         <div class="row" style="margin:0px; padding:0px">
           <div class="col col-25">
@@ -37,6 +40,7 @@
           </div>
           <div class="col col-67">
             <p>lol</p>
+            {{item.id}}
             <input type="text" id="{{'slider'+item.stackId}}" />
           </div>
           <div class="col">
@@ -47,7 +51,24 @@
       <div ng-show="loadedPast()" class="item item-divider">
         Past Reservations
       </div>
-
+<div class="list card" ng-repeat="item in service.pastReservations" type="item-text-wrap" ng-click="go(item.stackId)" style="margin:3px;">
+        <div class="item item-divider">
+          {{item.DBEntityStack.resourceDescription}}
+        </div>
+        <div class="row" style="margin:0px; padding:0px">
+          <div class="col col-25">
+            <img class="full-image" src="{{item.DBEntityStack.DBEntityVehicleType.thumbDest}}">
+          </div>
+          <div class="col col-67">
+            <p>lol</p>
+            {{item.id}}
+            <input type="text" id="{{'slider'+item.stackId}}" />
+          </div>
+          <div class="col">
+            <i class="icon ion-chevron-right icon-accessory" style="float:right"></i>
+          </div>
+        </div>
+      </div>
     </div>
   </ion-content>
 </ion-view>

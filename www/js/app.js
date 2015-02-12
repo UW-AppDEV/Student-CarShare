@@ -128,10 +128,13 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$we
       service.messages = data.WSDriversIntrestingThings.driverMessages;
     });
   };
-  this.getFutureReservation = function (callback) {
+  this.getFutureReservations = function (callback) {
     service.rest('futureReservations', function (data) {
       console.log(data);
-      service.futureReservation = data;
+      if (data.DBEntityReservation.length)//CHECKS IF IT IS AN ARRAY
+        service.futureReservations = data.DBEntityReservation;
+      else
+        service.futureReservations = data;
       if (typeof callback !== 'undefined')
         callback(data);
     });
@@ -139,15 +142,21 @@ app.service('$service', ['$window', '$rootScope', '$http', '$localstorage', '$we
   this.getCurrentReservation = function (callback) {
     service.rest('currentReservation', function (data) {
       console.log(data);
-      service.currentReservation = data;
+      if (data.DBEntityReservation.length)//CHECKS IF IT IS AN ARRAY
+        service.currentReservation = data.DBEntityReservation;
+      else
+        service.currentReservation = data;
       if (typeof callback !== 'undefined')
         callback(data);
     });
   };
-  this.getPastReservation = function (callback) {
+  this.getPastReservations = function (callback) {
     service.rest('pastReservations', function (data) {
       console.log(data);
-      service.pastReservation = data;
+      if (data.DBEntityReservation.length) //CHECKS IF IT IS AN ARRAY
+        service.pastReservations = data.DBEntityReservation;
+      else
+        service.pastReservations = data;
       if (typeof callback !== 'undefined')
         callback(data);
     });
