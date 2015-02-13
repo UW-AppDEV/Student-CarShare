@@ -1,4 +1,4 @@
-app.controller('ReservationCtrl', function ($scope, $state, $ionicSlideBoxDelegate, $service) {
+app.controller('ReservationCtrl', function ($scope, $state, $ionicSlideBoxDelegate, $service, $dateTime) {
   //CAN ADD TO EVERY SCOPE
   //Bind service variables to scope
   $scope.service = $service;
@@ -6,10 +6,13 @@ app.controller('ReservationCtrl', function ($scope, $state, $ionicSlideBoxDelega
   $scope.navigate = function (page) {
     $state.go(page);
   };
-  $scope.go = function (stackId) {
-    $state.go("tab.reservation-book", {
-      'id':stackId
+  $scope.go = function (id) {
+    $state.go("tab.reservation-detail", {
+      'id':id
     });
+  };
+  $scope.getDate = function (unixTime){
+    return $dateTime.dateString(unixTime);
   };
   $scope.loadData = function (forceRefresh){
     $service.getCurrentReservation(function (data) {$scope.$broadcast('scroll.refreshComplete');});

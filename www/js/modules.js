@@ -71,7 +71,7 @@ app.factory('$dateTime', function () {
     roundTime: function (time){
       return time - (time % 1800);
     },
-    dateString : function (UNIX_timestamp) {
+    timeString : function (UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
       var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       var year = a.getFullYear();
@@ -81,6 +81,19 @@ app.factory('$dateTime', function () {
       var min = a.getMinutes();
       var sec = a.getSeconds();
       var time = month + ' ' + date + ', ' + year + ' ' + hour + ':' + min + ':' + sec;
+      return time;
+    },
+    dateString : function (UNIX_timestamp) {
+      var a = new Date(UNIX_timestamp * 1000);
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      var year = a.getFullYear();
+      var month = months[a.getMonth()];
+      var date = a.getDate();
+      var day = days[a.getDay()];
+      var hour = a.getHours();
+      var min = a.getMinutes()|| "00";
+      var time = day + ', ' + month + ' ' + date + ', ' + year + ' ' + hour + ':' + min;
       return time;
     },
     //get unix timestamp

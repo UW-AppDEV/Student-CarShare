@@ -1,7 +1,27 @@
 <ion-view view-title="Detailed Reservation Page">
-    <ion-content class="padding">
-        <p>This is a detailed view of the possible locations,
+  <ion-content>
+    <div class="map-container" style="height:120px; width:100%;">
+      <ui-gmap-google-map id="map"
+                          center="map.center"
+                          pan="map.pan"
+                          zoom="map.zoom"
+                          draggable="false"
+                          options="map.options">
+        <ui-gmap-markers models="markers"
+                         idKey="'idKey'"
+                         coords="'self'"
+                         options="'options'"
+                         click="'onClick'">
+          <ui-gmap-windows show="'show'" options="'windowOptions'" closeClick="'onWindowClose'" ng-cloak>
+          </ui-gmap-windows>
+        </ui-gmap-markers>
+      </ui-gmap-google-map>
+      <div style="position:absolute; height:120px; width:100%; "></div>
+    </div>
+    <div class="padding">
+      <p>This is a detailed view of the possible locations,
         consider linking this page to map, or we can implement searches right here</p>
-        <p>reservationID is {{reservationId}}</p>
-    </ion-content>
+      <p>reservationID is {{reservationId}}</p>
+    </div>
+  </ion-content>
 </ion-view>
