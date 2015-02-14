@@ -126,7 +126,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 })
 .config(function(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
-    key: 'AIzaSyCuD7GXWfGRg-tbFBjno02hjPODQVtWbpI',
+    key: 'AIzaSyAq-h2ReOcEk4vM5BtqX2N9JvxO32cFepM',
     v: '3.17',
     libraries: 'weather,geometry,visualization'
   });
