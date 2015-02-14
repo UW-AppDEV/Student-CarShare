@@ -2,7 +2,33 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
   //Init
   $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
+    $scope.dates=[];
+    var DATE_FORMAT="ddd, MMM Do";
+    function initializedates(){
+        var date = moment();
 
+        for (var i = 0; i < 3; i++) {
+            var temp = {
+                format: date.add(i,"d").format(DATE_FORMAT),
+                isActive:i===0
+            };
+            $scope.dates.push(temp);
+        }
+    }
+    initializedates();
+    function getActiveDate(){
+        for (var i = 0; i < 3; i++) {
+            if($scope.dates[i].isActive===true){
+                return $scope.dates[i].format;
+            }
+        }
+        return $scope.dates[0].format;
+    }
+    $scope.toggleActive=function(index){
+        for(var i =0;i<$scope.dates.length;i++){
+            $scope.dates[i].isActive=i===index;
+        }
+    };
   $scope.stack = $service.getStack($scope.stackId);
     console.log($scope.stack);
     console.log($service.getStack);
@@ -17,10 +43,24 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
   };
   $scope.estimateCost = function (){
     $scope.timetable = $timetable.startEnd($scope.timetable);
+      console.log($scope.timetable);
     if ($timetable.continuous($scope.timetable)){
-      $service.getTripEstimate($scope.stack.stackId,$dateTime.arrayToUnix($scope.timetable.start),
-                               $dateTime.arrayToUnix($scope.timetable.end),
-                               function(data){if ($timetable.continuous($scope.timetable)){$scope.estimatedCost = data[0];}});
+        //this is in unix format, used moment.js to parse the string to unix
+        var TIME_FORMAT = "h:mm a";
+        var activeDate=getActiveDate();
+        var bookingStart =
+            moment(activeDate+" "+$timetable.getTimeByIndex($scope.timetable.start,$scope.timetable),
+                DATE_FORMAT+" "+TIME_FORMAT).unix();
+        console.log(bookingStart);
+        var bookingEnd =
+            moment(activeDate+" "+$timetable.getTimeByIndex($scope.timetable.end,$scope.timetable),
+                    DATE_FORMAT+" "+TIME_FORMAT).unix();
+        console.log(bookingEnd);
+      $service.getTripEstimate($scope.stack.stackId,bookingStart,bookingEnd,
+                               function(data){
+                                   console.log(data);
+                                   $scope.estimatedCost = data[0];
+                               });
     }
     else{
       $scope.estimatedCost = "N/A";

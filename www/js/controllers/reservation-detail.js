@@ -1,9 +1,11 @@
-app.controller('ReservationDetailCtrl', ['$rootScope', '$scope',"$stateParams","$state", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $state,$service, $dateTime, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
+app.controller('ReservationDetailCtrl', ['$rootScope', '$scope',"$stateParams","$state", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi',
+    function ($rootScope, $scope, $stateParams, $state,$service, $dateTime,$timetable, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
   //Init
   $scope.estimatedCost = "N/A";
   $scope.reservationId = $stateParams.id;
   $scope.reservation = $service.getReservation($scope.reservationId);
   console.log($scope.reservation);
+
   GoogleMapApi.then(function (maps) { //maps is an instance of google map
     $scope.locations = Locations;
       var defaultlat= $scope.stack.DBEntityStack.latitude;
@@ -34,8 +36,8 @@ app.controller('ReservationDetailCtrl', ['$rootScope', '$scope',"$stateParams","
       //instead, markers are now generated from the stackInfo
       $scope.markers=[{
           'idKey':0,
-          latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude) ,
-          longitude: defaultlng || parseInt($scope.stack.DBEntityStack.longitude) ,
+          latitude: parseInt($scope.stack.DBEntityStack.latitude) || defaultlat ,
+          longitude:  parseInt($scope.stack.DBEntityStack.longitude)|| defaultlng ,
           options:{
               draggable: false
           },
