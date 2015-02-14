@@ -1,4 +1,4 @@
-app.controller('ReservationDetailCtrl', ['$rootScope', '$scope',"$stateParams","$state", "$service","$dateTime", "$timetable", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $state,$service, $dateTime, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
+app.controller('ReservationDetailCtrl', ['$rootScope', '$scope',"$stateParams","$state", "$service","$dateTime", "uiGmapLogger", 'drawChannel', 'clearChannel', '$http', '$sce', 'Locations', 'uiGmapGoogleMapApi', function ($rootScope, $scope, $stateParams, $state,$service, $dateTime, $log, drawChannel, clearChannel, $http, $sce, Locations, GoogleMapApi) {
   //Init
   $scope.estimatedCost = "N/A";
   $scope.reservationId = $stateParams.id;
@@ -6,8 +6,8 @@ app.controller('ReservationDetailCtrl', ['$rootScope', '$scope',"$stateParams","
   console.log($scope.reservation);
   GoogleMapApi.then(function (maps) { //maps is an instance of google map
     $scope.locations = Locations;
-      var defaultlat= $scope.stack.DBEntityStack.latitude;
-      var defaultlng = $scope.stack.DBEntityStack.longitude;
+      var defaultlat= $scope.reservation.DBEntityStack.latitude;
+      var defaultlng = $scope.reservation.DBEntityStack.longitude;
     $scope.map = {
       center: {
         latitude: defaultlat || parseInt(1234),
