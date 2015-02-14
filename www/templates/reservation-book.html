@@ -1,22 +1,13 @@
 <ion-view view-title="{{what.name}}">
   <ion-content>
-    <div class="map-container" style="height:120px; width:100%;">
-      <ui-gmap-google-map id="map"
-                          center="map.center"
-                          pan="map.pan"
-                          zoom="map.zoom"
-                          draggable="false"
-                          options="map.options">
-        <ui-gmap-markers models="markers"
-                         idKey="'idKey'"
-                         coords="'self'"
-                         options="'options'"
-                         click="'onClick'">
+    <div class="map-container" style="width:100%; height:130px">
+      <ui-gmap-google-map id="map" center="map.center" pan="map.pan" zoom="map.zoom" draggable="false" options="map.options">
+        <ui-gmap-markers models="markers" idKey="'idKey'" coords="'self'" options="'options'" click="'onClick'">
           <ui-gmap-windows show="'show'" options="'windowOptions'" closeClick="'onWindowClose'" ng-cloak>
           </ui-gmap-windows>
         </ui-gmap-markers>
       </ui-gmap-google-map>
-      <div style="position:absolute; height:120px; width:100%; "></div>
+      <div style="position:absolute; height:130px; width:100%;" ng-click="toggleMap();"></div>
     </div>
     <div class="padding">
       <div class="card" style="margin:0px">
@@ -25,18 +16,18 @@
         </div>
         <div class="item item-text-wrap" style="margin:0px; padding:0px">
           <div ng-repeat="row in timetable" class="row" style="margin:0px; padding:0px">
-            <div ng-click="check(col.index, col.row, col.col)" ng-repeat="col in row" ng-style="{{col.style}}" class="col" style="position:relative; height:30px; border-top-style: solid; border-left-style: solid; border-color:#7D7D7D; border-width:1px;  text-align: center;">
-              <i ng-show="col.state==0" class="icon ion-close-round icon-accessory dark" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;"></i>
-              <p ng-show="col.state>=1" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;">{{col.time}}</p>
-              <i ng-show="col.state==2" class="icon ion-checkmark-round icon-accessory dark" style="position:absolute; right: 3px;"></i>
+            <div ng-click="check(col.index, col.row, col.col)" ng-repeat="col in row" ng-style="{{col.style}}" class="col Box">
+              <i ng-show="col.state==0" class="icon ion-close-round icon-accessory dark Cross"></i>
+              <p ng-show="col.state>=1">{{col.time}}</p>
+              <i ng-show="col.state==2" class="icon ion-checkmark-round icon-accessory dark Check"></i>
             </div>
-            <div ng-show="row.tmDisp=='AM'" class="col col-10" style="position:relative; height:30px; border-top-style: solid; border-color:#7D7D7D; border-width:1px;  text-align: center;">
-              <h6 style="position:absolute; top:0px; right:3px;" class="calm">AM</h6>
+            <div ng-show="row.tmDisp=='AM'" class="col col-10 AMBox">
+              <h6 class="calm">AM</h6>
             </div>
-            <div ng-show="row.tmDisp=='PM'" class="col col-10" style="position:relative; height:30px; border-top-style: solid; border-color:#7D7D7D; border-width:1px;  text-align: center;">
-              <h6 style="position:absolute; top:0px; right:3px;" class="balanced">PM</h6>
+            <div ng-show="row.tmDisp=='PM'" class="col col-10 PMBox">
+              <h6 class="balanced">PM</h6>
             </div>
-            <div ng-show="row.tmDisp==''" class="col col-10" style="position:relative; height:30px; border-top-style: none; border-color:#7D7D7D; border-width:1px;  text-align: center;">
+            <div ng-show="row.tmDisp==''" class="col col-10 BlankBox">
             </div>
           </div>
         </div>
@@ -46,6 +37,8 @@
         <p>Stack ID: {{stack.stackId}} DEBUG USE ONLY</p>
         <p>Vehicle: {{stack.DBEntityStack.resourceDescription}}</p>
         <p>Location: {{stack.DBEntityStack.lotDescription}}</p>
+        <p>Location: {{stack.bestStartStamp}}</p>
+        <p>Location: {{stack.bestEndStamp}}</p>
         <!--<div style="position:relative">
           <p style="position:absolute; right:0px; bottom:0px">Vehicle: {{stack.DBEntityStack.resourceDescription}}</p>
           REAL IMAGE ADDRESS<img class="full-image" src="{{stack.DBEntityStack.DBEntityVehicleType.imageDest}}">

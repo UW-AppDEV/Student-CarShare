@@ -2,7 +2,6 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
   //Init
   $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
-
   $scope.stack = $service.getStack($scope.stackId);
     console.log($scope.stack);
     console.log($service.getStack);
@@ -34,7 +33,7 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
     $scope.map = {
       center: {
         latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude),
-        longitude:  defaultlng|| parseInt($scope.stack.DBEntityStack.longitude)
+        longitude:  defaultlng || parseInt($scope.stack.DBEntityStack.longitude)
       },
       control: {},
       pan: true,

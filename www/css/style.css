@@ -1,5 +1,5 @@
 h1, h2, h3, h4, h5, h6, p, .h1, .h2, .h3, .h4, .h5, .h6 .item, .item-divider, a, .title, span, button, li{
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
 }
 
@@ -38,15 +38,51 @@ h1, h2, h3, h4, h5, h6, p, .h1, .h2, .h3, .h4, .h5, .h6 .item, .item-divider, a,
 }
 .marker-label{
 
-    background-color: #cfcfcf;
+  background-color: #cfcfcf;
 }
 .map-container{
-    height:60%;
-    position:relative;
+  height:60%;
+  position:relative;
 }
 .angular-google-map-container{
-    position:absolute;
-    height:100%;
+  position:absolute;
+  height:100%;
+}
+
+
+/*====================Time Box ====================*/
+.AMBox, .PMBox, .BlankBox, .Box{
+  position:relative;
+  height:30px;
+  border-color:#7D7D7D;
+  border-width:1px;
+}
+.AMBox{
+  border-top-style: solid;
+}
+.PMBox{
+  border-top-style: solid;
+}
+.PMBox>h6, .AMBox>h6{
+  position:absolute;
+  top:0px;
+  right:3px;
+}
+.Box{
+  border-top-style: solid;
+  border-left-style: solid;
+  text-align: center;
+}
+.Box>.Cross, .Box>p{
+  position:absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+}
+.Box>.Check{
+  position:absolute;
+  right: 3px;
 }
 
 

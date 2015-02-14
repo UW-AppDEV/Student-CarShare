@@ -10,17 +10,17 @@
         {{item.DBEntityStack.resourceDescription}}
         <p style="float:right">{{item.distancekm}} km away</p>
       </div>
-      <div class="row" style="margin:0px; padding:0px">
-        <div class="col col-25">
-          <img class="full-image" src="{{item.DBEntityStack.DBEntityVehicleType.thumbDest}}">
+      <div class="item item-text-wrap item-icon-right" style="margin:0px; padding:0px">
+        <div class="row" style="margin:0px; padding:0px">
+          <div class="col col-25">
+            <img class="full-image" src="{{item.DBEntityStack.DBEntityVehicleType.thumbDest}}">
+          </div>
+          <div class="col col-67">
+            <p>lol</p>
+            <input type="text" id="{{'slider'+item.stackId}}" />
+          </div>
         </div>
-        <div class="col col-67">
-          <p>lol</p>
-          <input type="text" id="{{'slider'+item.stackId}}" />
-        </div>
-        <div class="col">
-          <i class="icon ion-chevron-right icon-accessory" style="float:right"></i>
-        </div>
+        <i class="icon ion-ios7-arrow-right"></i>
       </div>
     </div>
   </ion-content>

@@ -10,8 +10,8 @@ app.controller('ReservationDetailCtrl', ['$rootScope', '$scope',"$stateParams","
       var defaultlng = $scope.reservation.DBEntityStack.longitude;
     $scope.map = {
       center: {
-        latitude: defaultlat || parseInt(1234),
-        longitude:  defaultlng|| parseInt(1234)
+        latitude: defaultlat || parseInt($scope.reservation.DBEntityStack.latitude),
+        longitude:  defaultlng|| parseInt($scope.reservation.DBEntityStack.longitude)
       },
       control: {},
       pan: true,
