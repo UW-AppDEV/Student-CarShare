@@ -12,7 +12,16 @@
     <div class="padding">
       <div class="card" style="margin:0px">
         <div class="item item-divider">
-          Wednesday, February 4, 2015
+            <ion-scroll direction="x" class="wide-as-needed">
+                <a ng-repeat="date in dates" class="date" style="display:inline-block" ng-class="{'date-active':date.isActive}"
+                        ng-click="toggleActive($index)">
+                    {{date.format}}
+                </a>
+                <a class="button button-clear" style="display:inline-block;position:fixed;right:2px;"
+                   ng-click="console.log('this button will take to the form')">MORE
+                </a>
+            </ion-scroll>
+
         </div>
         <div class="item item-text-wrap" style="margin:0px; padding:0px">
           <div ng-repeat="row in timetable" class="row" style="margin:0px; padding:0px">
