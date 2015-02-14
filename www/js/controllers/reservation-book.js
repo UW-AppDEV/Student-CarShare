@@ -3,8 +3,8 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
   $scope.estimatedCost = "N/A";
   $scope.stackId = $stateParams.id;
   $scope.stack = $service.getStack($scope.stackId);
-    console.log($scope.stack);
-    console.log($service.getStack);
+  console.log($scope.stack);
+  console.log($service.getStack);
   $scope.timetable = $timetable.applyStyle($timetable.makeTimetable(1,24));
   //Select Time etc
   $scope.check = function (index, row, col){
@@ -28,8 +28,8 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
 
   GoogleMapApi.then(function (maps) { //maps is an instance of google map
     $scope.locations = Locations;
-      var defaultlat= $scope.stack.DBEntityStack.latitude;
-      var defaultlng = $scope.stack.DBEntityStack.longitude;
+    var defaultlat= $scope.stack.DBEntityStack.latitude;
+    var defaultlng = $scope.stack.DBEntityStack.longitude;
     $scope.map = {
       center: {
         latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude),
@@ -44,30 +44,30 @@ app.controller('ReservationBookCtrl', ['$rootScope', '$scope',"$stateParams","$s
       polys: [],
       draw: undefined,
       options:{
-          scrollwheel: false,
-          navigationControl: false,
-          mapTypeControl: false,
-          scaleControl: false,
+        scrollwheel: false,
+        navigationControl: false,
+        mapTypeControl: false,
+        scaleControl: false,
         disableDefaultUI:true,
         draggable:false
       }
     };
     //$scope.markers = Locations; Not using the list of carshare locations from service anymore,
-      //instead, markers are now generated from the stackInfo
-      $scope.markers=[{
-          'idKey':0,
-          latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude) ,
-          longitude: defaultlng || parseInt($scope.stack.DBEntityStack.longitude) ,
-          options:{
-              draggable: false
-          },
-          onClick:function(){
-              $state.go('tab.map-detail',{
-                  lat: $scope.stack.DBEntityStack.latitude,
-                  lng: $scope.stack.DBEntityStack.longitude
-              })
-          }
-      }];
+    //instead, markers are now generated from the stackInfo
+    $scope.markers=[{
+      'idKey':0,
+      latitude: defaultlat || parseInt($scope.stack.DBEntityStack.latitude) ,
+      longitude: defaultlng || parseInt($scope.stack.DBEntityStack.longitude) ,
+      options:{
+        draggable: false
+      },
+      onClick:function(){
+        $state.go('tab.map-detail',{
+          lat: $scope.stack.DBEntityStack.latitude,
+          lng: $scope.stack.DBEntityStack.longitude
+        })
+      }
+    }];
   });
   //This is for getting user's location in Cordova
   $scope.myLocation = "";
