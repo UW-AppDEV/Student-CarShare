@@ -110,8 +110,8 @@ app.factory('$timetable', function () {
       //Mark Avaliable
       var timetable = timetableTemplate;
       var count = 0;
-      for (i=0; i<timetable.length; i++){
-        for (i2=0; i2<timetable[0].length;i2++){
+      for (var i=0; i<timetable.length; i++){
+        for (var i2=0; i2<timetable[0].length;i2++){
           timetable[i][i2].index=i*6+i2;
           if (count>=start && count<=end)
             timetable[i][i2].state = 1;
@@ -124,8 +124,8 @@ app.factory('$timetable', function () {
       return timetable.slice(start/6, end/6+1);
     },
     continuous: function (timetable) {
-      for (i=0; i<timetable.length; i++){
-        for (i2=0; i2<timetable[0].length; i2++){
+      for (var i=0; i<timetable.length; i++){
+        for (var i2=0; i2<timetable[0].length; i2++){
           if (timetable[i][i2].state == 1 && timetable[i][i2].index>timetable.start && timetable[i][i2].index<timetable.end){
             return false;
           }
@@ -136,8 +136,8 @@ app.factory('$timetable', function () {
     startEnd: function (timetable) {
       timetable.start = 23;
       timetable.end = 0;
-      for (i=0; i<timetable.length; i++){
-        for (i2=0; i2<timetable[0].length; i2++){
+      for (var i=0; i<timetable.length; i++){
+        for (var i2=0; i2<timetable[0].length; i2++){
           if (timetable[i][i2].state == 2){
             if (timetable[i][i2].index<timetable.start)
               timetable.start = timetable[i][i2].index;
@@ -172,6 +172,19 @@ app.factory('$timetable', function () {
       }
       return timetable;
     },
+    getTimeByIndex:function(index,timetable){
+      var count=0;
+      for (var i=0; i<timetable.length; i++){
+        for (var i2=0; i2<timetable[0].length; i2++) {
+          if(count===index){
+            return timetable[i][i2].time + " " + timetable[i][i2].ampm;
+          }else{
+            count++;
+          }
+        }
+      }
+      return false;
+    }
   };
 });
 
