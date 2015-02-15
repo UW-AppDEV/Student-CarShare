@@ -1,45 +1,54 @@
 <ion-view view-title="Search">
   <ion-content>
     <ion-list>
-      <ion-item class="item-divider">
-        Start:
-      </ion-item>
-      <ion-item class="item-input">
-        <input type="Date" placeholder="Today">
-      </ion-item>
-      <ion-item class="item-input">
-        <input type="text" placeholder="HH">
-        :
-        <input type="text" placeholder="MM">
-        <select>
-          <option selected>AM</option>
-          <option>PM</option>
-        </select>
-      </ion-item>
-      <ion-item class="item-divider">
-        End:
-      </ion-item>
-      <ion-item class="item-input">
-        <input type="Date" placeholder="Today">
-      </ion-item>
-      <ion-item class="item-input">
-        <input type="text" placeholder="HH">
-        :
-        <input type="text" placeholder="MM">
-        <select>
-          <option selected>AM</option>
-          <option>PM</option>
-        </select>
-      </ion-item>
-      <ion-item class="item item-toggle">
-        My time is flexible
-        <label class="toggle toggle-assertive">
-          <input type="checkbox">
-          <div class="track">
-            <div class="handle"></div>
-          </div>
-        </label>
-      </ion-item>
+        <ion-item class="item-stable"
+                    ng-click="toggleGroup(group)"
+                    ng-class="{active: isGroupShown(group)}">
+              <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
+            &nbsp;
+            Time/Date search
+          </ion-item>
+        <ion-item class="item-accordion" ng-show="isGroupShown(group)">
+          <ion-item class="item-divider">
+            Start:
+          </ion-item>
+          <ion-item class="item-input">
+            <input type="Date" placeholder="Today">
+          </ion-item>
+          <ion-item class="item-input">
+            <input type="text" placeholder="HH">
+            :
+            <input type="text" placeholder="MM">
+            <select>
+              <option selected>AM</option>
+              <option>PM</option>
+            </select>
+          </ion-item>
+          <ion-item class="item-divider">
+            End:
+          </ion-item>
+          <ion-item class="item-input">
+            <input type="Date" placeholder="Today">
+          </ion-item>
+          <ion-item class="item-input">
+            <input type="text" placeholder="HH">
+            :
+            <input type="text" placeholder="MM">
+            <select>
+              <option selected>AM</option>
+              <option>PM</option>
+            </select>
+          </ion-item>
+          <ion-item class="item item-toggle">
+            My time is flexible
+            <label class="toggle toggle-assertive">
+              <input type="checkbox">
+              <div class="track">
+                <div class="handle"></div>
+              </div>
+            </label>
+          </ion-item>
+        </ion-item>
       <ion-item class="item item-toggle">
         Show non matches
         <label class="toggle toggle-assertive">
